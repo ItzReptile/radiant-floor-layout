@@ -1,0 +1,4 @@
+# Scripts and sources run inside Linux containers: always LF line endings
+* text=auto eol=lf
+*.png binary
+*.webp binary

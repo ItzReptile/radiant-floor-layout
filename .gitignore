@@ -1,0 +1,21 @@
+# Logs
+*.log
+
+# Secrets: agent auth tokens, API keys (never commit these)
+.env
+.env.*
+*.token
+auth.json
+**/codex/auth.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local Terminal-Bench checkout (tooling only)
+vendor/
+
+# Harbor job outputs
+jobs/
