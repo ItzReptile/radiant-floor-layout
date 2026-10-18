@@ -1,0 +1,211 @@
+{
+ "name": "case-11",
+ "grid": 0.05,
+ "building": [
+  0.0,
+  0.0,
+  9.5,
+  8.0
+ ],
+ "edge_margin": 0.1,
+ "rooms": [
+  {
+   "id": "living",
+   "rect": [
+    4.5,
+    0.0,
+    9.5,
+    2.95
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.05,
+   "max_surface": 29.0,
+   "max_spread": 2.7,
+   "zone_margin": 0.5,
+   "required_w": 538,
+   "max_w": 670
+  },
+  {
+   "id": "kitchen",
+   "rect": [
+    0.0,
+    0.0,
+    4.5,
+    2.95
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.01,
+   "max_surface": 29.0,
+   "max_spread": 1.7,
+   "zone_margin": 0.5,
+   "required_w": 367,
+   "max_w": 458
+  },
+  {
+   "id": "bed1",
+   "rect": [
+    6.15,
+    4.4,
+    9.5,
+    8.0
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.05,
+   "max_surface": 29.0,
+   "max_spread": 2.7,
+   "zone_margin": 0.5,
+   "required_w": 337,
+   "max_w": 420
+  },
+  {
+   "id": "bed2",
+   "rect": [
+    2.6,
+    4.4,
+    6.15,
+    8.0
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.1,
+   "max_surface": 29.0,
+   "max_spread": 2.2,
+   "zone_margin": 0.5,
+   "required_w": 325,
+   "max_w": 405
+  },
+  {
+   "id": "bath",
+   "rect": [
+    0.0,
+    4.4,
+    2.6,
+    8.0
+   ],
+   "air_temp": 24.0,
+   "floor_r": 0.01,
+   "max_surface": 33.0,
+   "max_spread": 1.8,
+   "zone_margin": 0.3,
+   "required_w": 237,
+   "max_w": 296
+  },
+  {
+   "id": "hall",
+   "rect": [
+    0.0,
+    2.95,
+    9.5,
+    4.4
+   ],
+   "air_temp": 18.0,
+   "floor_r": 0.01,
+   "max_surface": 29.0,
+   "max_spread": 7.0,
+   "zone_margin": 0.15,
+   "required_w": 318,
+   "max_w": 397
+  }
+ ],
+ "passages": [
+  [
+   6.9,
+   2.95,
+   7.7,
+   2.95
+  ],
+  [
+   2.4,
+   2.95,
+   3.2,
+   2.95
+  ],
+  [
+   7.2,
+   4.4,
+   8.05,
+   4.4
+  ],
+  [
+   3.35,
+   4.4,
+   4.2,
+   4.4
+  ],
+  [
+   0.3,
+   4.4,
+   1.0,
+   4.4
+  ]
+ ],
+ "keepouts": [
+  [
+   0.0,
+   0.0,
+   4.5,
+   0.6
+  ],
+  [
+   1.8,
+   1.5,
+   2.8,
+   2.1
+  ],
+  [
+   6.15,
+   7.4,
+   7.75,
+   8.0
+  ],
+  [
+   2.6,
+   7.4,
+   4.5,
+   8.0
+  ],
+  [
+   0.0,
+   7.0,
+   1.0,
+   8.0
+  ],
+  [
+   5.45,
+   4.3,
+   6.65,
+   4.4
+  ]
+ ],
+ "manifold": {
+  "origin": [
+   6.6,
+   4.25
+  ],
+  "direction": [
+   -1,
+   0
+  ],
+  "ports": 12
+ },
+ "pipe": {
+  "min_spacing": 0.1,
+  "min_segment": 0.1,
+  "max_loop_length": 100.0,
+  "port_pitch": 0.1
+ },
+ "physics": {
+  "supply_temp": 40.0,
+  "flow_constant": 9000.0,
+  "flow_offset": 80.0,
+  "g_pipe": 4.0,
+  "sleeve_length": 1.0,
+  "sleeve_factor": 0.2,
+  "k_screed": 1.2,
+  "pipe_layer": 0.02,
+  "surface_layer": 0.1,
+  "layer_gap": 0.12,
+  "insulation_u": 0.75,
+  "below_temp": 15.0,
+  "h_surface": 10.8
+ }
+}
