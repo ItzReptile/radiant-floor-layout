@@ -20,7 +20,7 @@ tags = ["hvac", "underfloor-heating", "layout", "routing", "heat-transfer", "opt
 expert_time_estimate_hours = 6.0
 
 [verifier]
-timeout_sec = 3600.0 # the solver runs on every held-out plan (up to 180 s each)
+timeout_sec = 1200.0 # the solver runs on every held-out plan (up to 40 s each)
 environment_mode = "separate"
 
 [agent]

@@ -35,10 +35,12 @@ sys.path.insert(0, str(HERE))
 import ablation as ab  # noqa: E402
 
 BASE = json.loads((HERE / "base_plan.json").read_text())
-Q = {"living": 40.0, "kitchen": 34.0, "bed": 30.0, "bath": 48.0}
+Q = {"living": 34.0, "kitchen": 27.0, "bed": 24.0, "bath": 30.0, "study": 24.0}
 # limits set around the reference result (None: keep the fixed per-type limit)
-OPTS = {"spread_margin": 0.5, "hall_peak_margin": None, "hall_spread_margin": 0.3, "q_scale": 1.0,
-        "hall_margin": 0.15, "reject_bundles": True, "reject_serpentine": True}
+OPTS = {"spread_margin": 0.45, "spread_cap": 3.2, "bath_cap": 4.0, "hall_peak_margin": None,
+        "hall_spread_margin": 0.3, "q_scale": 1.0, "hall_margin": 0.15,
+        "filters": ("north", "south", "uniform", "serp")}
+REJECTED = __import__("collections").Counter()
 
 
 def r2(v):
@@ -51,21 +53,24 @@ def pick(rng, lo, hi, step=0.05):
 
 
 def make_geometry(rng):
-    W = pick(rng, 9.5, 12.5, 0.5)
+    """Canonical frame: hall along x, living + kitchen to the south, bed/bath/bed to the north,
+    and a study behind one bedroom that opens only into that bedroom."""
+    W = pick(rng, 9.5, 11.0, 0.5)
     hall_h = pick(rng, 1.25, 1.6)
-    south_d = pick(rng, 2.9, 3.8)
-    north_d = pick(rng, 2.9, 3.6)
+    south_d = pick(rng, 3.4, 4.0)
+    north_d = pick(rng, 4.1, 4.6)
     H = r2(south_d + hall_h + north_d)
     hy0, hy1 = south_d, r2(south_d + hall_h)
     rooms, passages, keepouts = [], [], []
+    KIND = {"living": (20.0, 0.05, 29.0, 3.0, 0.5), "kitchen": (20.0, 0.01, 29.0, 3.0, 0.5),
+            "bed": (20.0, None, 29.0, 3.0, 0.5), "bath": (24.0, 0.01, 33.0, 4.0, 0.3),
+            "study": (20.0, 0.05, 29.0, 3.0, 0.5)}
 
     def room(rid, kind, rect):
-        air = {"living": 20.0, "kitchen": 20.0, "bed": 20.0, "bath": 24.0}[kind]
-        floor_r = {"living": 0.05, "kitchen": 0.01, "bed": rng.choice([0.05, 0.10]), "bath": 0.01}[kind]
-        rooms.append({"id": rid, "kind": kind, "rect": rect, "air_temp": air, "floor_r": floor_r,
-                      "max_surface": 33.0 if kind == "bath" else 29.0,
-                      "max_spread": 4.0 if kind == "bath" else 3.0,
-                      "zone_margin": 0.3 if kind == "bath" else 0.5})
+        air, fr, mx, sp, zm = KIND[kind]
+        rooms.append({"id": rid, "kind": kind, "rect": rect, "air_temp": air,
+                      "floor_r": fr if fr is not None else rng.choice([0.05, 0.10]),
+                      "max_surface": mx, "max_spread": sp, "zone_margin": zm})
 
     def door(x0, x1, y, width, centre=None):
         if centre is None:
@@ -74,8 +79,8 @@ def make_geometry(rng):
         passages.append([a, y, r2(a + width), y])
         return passages[-1]
 
-    # south side: living (2 loops) and kitchen
-    s = pick(rng, 0.52 * W, 0.62 * W)
+    # south side: living (2 loops) with a peninsula, kitchen with counters and an island
+    s = pick(rng, 0.50 * W, 0.58 * W)
     living_west = rng.random() < 0.5
     lv = [0.0, 0.0, s, hy0] if living_west else [r2(W - s), 0.0, W, hy0]
     kt = [s, 0.0, W, hy0] if living_west else [0.0, 0.0, r2(W - s), hy0]
@@ -84,51 +89,78 @@ def make_geometry(rng):
     lw = lv[2] - lv[0]
     door(lv[0], lv[2], hy0, 0.8, centre=pick(rng, lv[0] + 0.4 * lw, lv[0] + 0.6 * lw))
     door(kt[0], kt[2], hy0, pick(rng, 0.8, 1.0))
-    keepouts.append([kt[0], 0.0, kt[2], 0.6])  # counters along the outer wall
-    iw, ih = pick(rng, 1.0, 1.6), pick(rng, 0.6, 0.9)
-    ix = pick(rng, kt[0] + 0.9, kt[2] - 0.9 - iw)
-    iy = pick(rng, 1.5, max(1.5, hy0 - 0.9 - ih))
+    # living: a peninsula (chimney breast) off the outer wall, 0.80-1.05 m from a side wall
+    pw, pd, ch = pick(rng, 0.4, 0.6), pick(rng, 1.0, 1.6), pick(rng, 0.80, 1.05)
+    px = r2(lv[0] + ch) if rng.random() < 0.5 else r2(lv[2] - ch - pw)
+    keepouts.append([px, 0.0, r2(px + pw), pd])
+    # kitchen: counters along the outer wall, an island 0.80-1.05 m from the counters and from
+    # one side wall
+    keepouts.append([kt[0], 0.0, kt[2], 0.6])
+    iw, ih = pick(rng, 1.0, 1.5), pick(rng, 0.6, 0.8)
+    iy = r2(0.6 + pick(rng, 0.80, 1.05))
+    if iy + ih > hy0 - 0.9:
+        return None
+    side = pick(rng, 0.80, 1.05)
+    ix = r2(kt[0] + side) if rng.random() < 0.5 else r2(kt[2] - side - iw)
     keepouts.append([ix, iy, r2(ix + iw), r2(iy + ih)])
-    # north side: two bedrooms and a bath
-    bath_w = pick(rng, 2.0, 2.6)
+    # north side: two bedrooms and a bath; a study behind the narrower bedroom
+    bath_w = pick(rng, 2.0, 2.4)
     rest = W - bath_w
-    b1 = pick(rng, 0.4 * rest, 0.6 * rest)
+    b1 = pick(rng, 0.45 * rest, 0.55 * rest)
+    widths = [b1, r2(rest - b1)]
     order = rng.choice([("bed", "bath", "bed"), ("bath", "bed", "bed"), ("bed", "bed", "bath")])
-    widths = {"bath": bath_w}
+    parent = 0 if widths[0] <= widths[1] else 1
     x = 0.0
     beds = 0
     for kind in order:
-        w = bath_w if kind == "bath" else (b1 if beds == 0 else r2(rest - b1))
-        rect = [x, hy1, r2(x + w), H] if kind != "bath" or True else None
-        if kind == "bed":
-            beds += 1
-            rid = f"bed{beds}"
-        else:
-            rid = "bath"
-        if abs(rect[2] - W) < 0.06:
-            rect[2] = W
-        room(rid, kind, rect)
-        door(rect[0], rect[2], hy1, pick(rng, 0.7, 0.9) if kind == "bath" else pick(rng, 0.8, 0.9))
+        w = bath_w if kind == "bath" else widths[beds]
+        x1 = W if abs(x + w - W) < 0.06 else r2(x + w)
         if kind == "bath":
+            rect = [x, hy1, x1, H]
+            room("bath", "bath", rect)
+            door(x, x1, hy1, pick(rng, 0.7, 0.9))
             tray = pick(rng, 0.9, 1.0)
             if rng.random() < 0.5:
-                keepouts.append([rect[0], r2(H - tray), r2(rect[0] + tray), H])
+                keepouts.append([x, r2(H - tray), r2(x + tray), H])
             else:
-                keepouts.append([r2(rect[2] - tray), r2(H - tray), rect[2], H])
+                keepouts.append([r2(x1 - tray), r2(H - tray), x1, H])
         else:
-            ww = pick(rng, 1.4, 2.0)
-            if rng.random() < 0.5:
-                keepouts.append([rect[0], r2(H - 0.6), r2(rect[0] + ww), H])
+            rid = f"bed{beds + 1}"
+            ww = pick(rng, 1.4, 1.8)
+            if beds == parent:
+                width = x1 - x
+                sd = r2(min(max(pick(rng, 4.5, 6.5) / width, 1.6), 2.1))
+                ys = r2(H - sd)
+                if ys - hy1 < 2.5:
+                    return None
+                room(rid, "bed", [x, hy1, x1, ys])
+                room("study", "study", [x, ys, x1, H])
+                door(x, x1, hy1, pick(rng, 0.8, 0.9))
+                # wardrobe along a side wall against the study wall; the study door on the other half
+                left = rng.random() < 0.5
+                if left:
+                    keepouts.append([x, r2(ys - ww), r2(x + 0.6), ys])
+                    door(r2(x + 0.6 + 0.3), x1, ys, pick(rng, 0.8, 0.9))
+                else:
+                    keepouts.append([r2(x1 - 0.6), r2(ys - ww), x1, ys])
+                    door(x, r2(x1 - 0.6 - 0.3), ys, pick(rng, 0.8, 0.9))
             else:
-                keepouts.append([r2(rect[2] - ww), r2(H - 0.6), rect[2], H])
-        x = rect[2]
+                room(rid, "bed", [x, hy1, x1, H])
+                door(x, x1, hy1, pick(rng, 0.8, 0.9))
+                if rng.random() < 0.5:
+                    keepouts.append([x, r2(H - 0.6), r2(x + ww), H])
+                else:
+                    keepouts.append([r2(x1 - ww), r2(H - 0.6), x1, H])
+            beds += 1
+        x = x1
     hall = {"id": "hall", "kind": "hall", "rect": [0.0, hy0, W, hy1], "air_temp": 18.0, "floor_r": 0.01,
             "max_surface": 29.0, "max_spread": 9.0, "zone_margin": OPTS["hall_margin"]}
     rooms.append(hall)
     # manifold on the hall's north wall, clear of the doors on that wall
     north_doors = [p for p in passages if abs(p[1] - hy1) < 1e-9]
     for _ in range(200):
-        mx = pick(rng, 0.6, W - 1.9)
+        # in the middle part of the hall, so that loops leave it in both directions
+        mx = pick(rng, 0.3 * W, 0.7 * W - 1.15)
         if all(mx + 1.25 < d[0] - 0.3 or mx - 0.15 > d[2] + 0.3 for d in north_doors):
             break
     else:
@@ -142,7 +174,7 @@ def make_geometry(rng):
 
 
 def finish(plan, rng):
-    """Solve towards heat targets, then set the windows around the reference result."""
+    """Solve towards heat targets, then set the limits around the reference result."""
     targets = {}
     for r in plan["rooms"]:
         x0, y0, x1, y1 = r["rect"]
@@ -150,20 +182,24 @@ def finish(plan, rng):
             targets[r["id"]] = OPTS["q_scale"] * Q[r["kind"]] * (x1 - x0) * (y1 - y0)
         r["required_w"], r["max_w"] = 0, 10 ** 6
     try:
-        layout, rep = ls.solve(plan, ck.evaluate, targets)
+        layout, rep = ls.solve(plan, ck.evaluate, targets, max_evals=30, time_budget=120, spread_goal=2.5)
     except Exception:
+        REJECTED["no layout"] += 1
         return None
     if rep["geometry_problems"]:
+        REJECTED["no layout"] += 1
         return None
     for r, res in zip(plan["rooms"], rep["rooms"]):
+        if res["max_surface"] > r["max_surface"] - 0.4:
+            REJECTED["reference peak"] += 1
+            return None
         if r["kind"] != "hall":
-            if res["max_surface"] > r["max_surface"] - 0.4 or res["zone_spread"] > r["max_spread"] - 0.4:
+            lim = math.ceil((res["zone_spread"] + OPTS["spread_margin"]) * 10) / 10
+            if lim > (OPTS["bath_cap"] if r["kind"] == "bath" else OPTS["spread_cap"]):
+                REJECTED["reference spread"] += 1
                 return None
-            if OPTS["spread_margin"] is not None:
-                r["max_spread"] = min(r["max_spread"], math.ceil((res["zone_spread"] + OPTS["spread_margin"]) * 10) / 10)
+            r["max_spread"] = lim
         else:
-            if res["max_surface"] > r["max_surface"] - 0.4:
-                return None
             r["max_spread"] = math.ceil((res["zone_spread"] + OPTS["hall_spread_margin"]) * 10) / 10
             if OPTS["hall_peak_margin"] is not None:
                 r["max_surface"] = math.ceil((res["max_surface"] + OPTS["hall_peak_margin"]) * 10) / 10
@@ -173,19 +209,14 @@ def finish(plan, rng):
     # the finished plan must be solvable from scratch by the reference solver
     layout, rep = ls.solve(plan, ck.evaluate)
     if not rep["passed"]:
+        REJECTED["reference from scratch"] += 1
         return None
+    # every check must matter: drop plans that a baseline missing one idea passes
     canon = ls.transform_plan(plan, ls.canonical_transform(plan))
-    # the hall check must matter: drop plans where leaders packed against either hall wall
-    # still pass (a hall too narrow for the reference to spread its leaders)
-    if OPTS["reject_bundles"]:
-        for lanes in ("north", "south"):
-            _, brep, _ = ab.tune(copy.deepcopy(canon), "cf", lanes)
-            if brep is not None and brep["passed"]:
-                return None
-    # the evenness checks must matter: drop plans a naive single-pass serpentine passes
-    if OPTS["reject_serpentine"]:
-        _, srep, _ = ab.tune(copy.deepcopy(canon), "serp", "spread")
-        if srep is not None and srep["passed"]:
+    for mode in OPTS["filters"]:
+        _, brep = ab.solve_mode(copy.deepcopy(canon), mode)
+        if brep is not None and not brep["geometry_problems"] and brep["passed"]:
+            REJECTED[f"passed by {mode}"] += 1
             return None
     return plan
 
@@ -220,10 +251,9 @@ def main():
     ap.add_argument("--flow-offset", type=float, help="override physics.flow_offset")
     ap.add_argument("--hall-margin", type=float, default=0.15, help="hall zone_margin")
     ap.add_argument("--start", type=int, default=0, help="number of the first plan")
-    ap.add_argument("--keep-bundles", action="store_true", help="do not drop plans that bundled leaders pass")
-    ap.add_argument("--keep-serpentine", action="store_true", help="do not drop plans a naive serpentine passes")
+    ap.add_argument("--no-filters", action="store_true", help="keep plans that a baseline passes")
     ap.add_argument("--supply", type=float, help="override physics.supply_temp")
-    ap.add_argument("--spread-margin", type=float, default=0.5, help="room spread limit = reference spread + margin")
+    ap.add_argument("--spread-margin", type=float, default=0.45, help="room spread limit = reference spread + margin")
     ap.add_argument("--hall-peak-margin", type=float, help="hall peak limit = reference peak + margin")
     ap.add_argument("--hall-spread-margin", type=float, default=0.3, help="hall spread limit = reference + margin")
     ap.add_argument("--q-scale", type=float, default=1.0, help="scale the heat targets")
@@ -236,8 +266,7 @@ def main():
         BASE["physics"]["supply_temp"] = args.supply
     OPTS.update(spread_margin=args.spread_margin, hall_peak_margin=args.hall_peak_margin,
                 hall_spread_margin=args.hall_spread_margin, q_scale=args.q_scale,
-                hall_margin=args.hall_margin, reject_bundles=not args.keep_bundles,
-                reject_serpentine=not args.keep_serpentine)
+                hall_margin=args.hall_margin, filters=() if args.no_filters else OPTS["filters"])
     rng = random.Random(args.seed)
     args.out.mkdir(parents=True, exist_ok=True)
     made = tries = 0
@@ -258,7 +287,8 @@ def main():
         plan["name"] = f"{args.prefix}-{args.start + made:02d}"
         (args.out / f"{plan['name']}.json").write_text(json.dumps(plan, indent=1) + "\n")
         made += 1
-        print(f"{plan['name']}: ok after {tries} tries  W={plan['building'][2]} H={plan['building'][3]}", flush=True)
+        print(f"{plan['name']}: ok after {tries} tries  W={plan['building'][2]} H={plan['building'][3]}  "
+              f"rejected: {dict(REJECTED)}", flush=True)
 
 
 if __name__ == "__main__":

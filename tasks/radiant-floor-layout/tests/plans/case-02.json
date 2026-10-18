@@ -4,8 +4,8 @@
  "building": [
   0.0,
   0.0,
-  8.2,
-  12.0
+  9.45,
+  9.5
  ],
  "edge_margin": 0.1,
  "rooms": [
@@ -13,173 +13,201 @@
    "id": "living",
    "rect": [
     0.0,
-    4.6,
-    3.6,
-    12.0
-   ],
-   "air_temp": 20.0,
-   "floor_r": 0.05,
-   "max_surface": 29.0,
-   "max_spread": 3.0,
-   "zone_margin": 0.5,
-   "required_w": 769,
-   "max_w": 958
-  },
-  {
-   "id": "kitchen",
-   "rect": [
-    0.0,
-    0.0,
-    3.6,
-    4.6
-   ],
-   "air_temp": 20.0,
-   "floor_r": 0.01,
-   "max_surface": 29.0,
-   "max_spread": 2.2,
-   "zone_margin": 0.5,
-   "required_w": 373,
-   "max_w": 465
-  },
-  {
-   "id": "bed1",
-   "rect": [
-    5.05,
-    0.0,
-    8.2,
-    5.2
+    4.4,
+    3.85,
+    9.5
    ],
    "air_temp": 20.0,
    "floor_r": 0.05,
    "max_surface": 29.0,
    "max_spread": 2.8,
    "zone_margin": 0.5,
-   "required_w": 397,
-   "max_w": 496
+   "required_w": 597,
+   "max_w": 744
   },
   {
-   "id": "bed2",
+   "id": "kitchen",
    "rect": [
-    5.05,
-    5.2,
-    8.2,
-    9.5
+    0.0,
+    0.0,
+    3.85,
+    4.4
    ],
    "air_temp": 20.0,
-   "floor_r": 0.1,
+   "floor_r": 0.01,
    "max_surface": 29.0,
    "max_spread": 2.6,
    "zone_margin": 0.5,
-   "required_w": 340,
-   "max_w": 424
+   "required_w": 389,
+   "max_w": 485
   },
   {
    "id": "bath",
    "rect": [
-    5.05,
-    9.5,
-    8.2,
-    12.0
+    5.25,
+    0.0,
+    9.45,
+    2.4
    ],
    "air_temp": 24.0,
    "floor_r": 0.01,
    "max_surface": 33.0,
-   "max_spread": 1.7,
+   "max_spread": 2.4,
    "zone_margin": 0.3,
-   "required_w": 231,
-   "max_w": 288
+   "required_w": 238,
+   "max_w": 297
+  },
+  {
+   "id": "bed1",
+   "rect": [
+    5.25,
+    2.4,
+    7.8,
+    5.9
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.05,
+   "max_surface": 29.0,
+   "max_spread": 2.9,
+   "zone_margin": 0.5,
+   "required_w": 198,
+   "max_w": 247
+  },
+  {
+   "id": "study",
+   "rect": [
+    7.8,
+    2.4,
+    9.45,
+    5.9
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.05,
+   "max_surface": 29.0,
+   "max_spread": 2.0,
+   "zone_margin": 0.5,
+   "required_w": 159,
+   "max_w": 199
+  },
+  {
+   "id": "bed2",
+   "rect": [
+    5.25,
+    5.9,
+    9.45,
+    9.5
+   ],
+   "air_temp": 20.0,
+   "floor_r": 0.05,
+   "max_surface": 29.0,
+   "max_spread": 3.1,
+   "zone_margin": 0.5,
+   "required_w": 327,
+   "max_w": 408
   },
   {
    "id": "hall",
    "rect": [
-    3.6,
+    3.85,
     0.0,
-    5.05,
-    12.0
+    5.25,
+    9.5
    ],
    "air_temp": 18.0,
    "floor_r": 0.01,
    "max_surface": 29.0,
-   "max_spread": 6.9,
+   "max_spread": 6.7,
    "zone_margin": 0.15,
-   "required_w": 350,
-   "max_w": 437
+   "required_w": 453,
+   "max_w": 565
   }
  ],
  "passages": [
   [
-   3.6,
-   7.85,
-   3.6,
-   8.65
+   3.85,
+   6.9,
+   3.85,
+   7.7
   ],
   [
-   3.6,
-   1.6,
-   3.6,
-   2.55
+   3.85,
+   1.15,
+   3.85,
+   2.1
   ],
   [
-   5.05,
-   2.4,
-   5.05,
-   3.25
+   5.25,
+   0.75,
+   5.25,
+   1.65
   ],
   [
-   5.05,
-   8.15,
-   5.05,
-   9.05
+   5.25,
+   4.2,
+   5.25,
+   5.0
   ],
   [
-   5.05,
-   10.2,
-   5.05,
-   11.1
+   7.8,
+   4.3,
+   7.8,
+   5.15
+  ],
+  [
+   5.25,
+   7.35,
+   5.25,
+   8.15
   ]
  ],
  "keepouts": [
   [
    0.0,
+   5.3,
+   1.2,
+   5.85
+  ],
+  [
+   0.0,
    0.0,
    0.6,
-   4.6
+   4.4
   ],
   [
-   1.85,
-   1.75,
-   2.6,
-   3.1
+   1.65,
+   2.55,
+   2.45,
+   3.6
   ],
   [
-   7.6,
-   0.0,
-   8.2,
-   1.7
+   8.5,
+   1.45,
+   9.45,
+   2.4
   ],
   [
-   7.6,
-   5.2,
-   8.2,
-   7.15
+   6.0,
+   2.4,
+   7.8,
+   3.0
   ],
   [
-   7.2,
-   11.0,
-   8.2,
-   12.0
+   8.85,
+   5.9,
+   9.45,
+   7.5
   ],
   [
-   4.95,
-   5.8,
-   5.05,
-   7.0
+   5.15,
+   5.45,
+   5.25,
+   6.65
   ]
  ],
  "manifold": {
   "origin": [
-   4.9,
-   5.85
+   5.1,
+   5.5
   ],
   "direction": [
    0,
@@ -206,6 +234,8 @@
   "layer_gap": 0.12,
   "insulation_u": 0.75,
   "below_temp": 15.0,
-  "h_surface": 10.8
+  "h_core": 10.0,
+  "h_perim": 12.5,
+  "perim_width": 1.0
  }
 }

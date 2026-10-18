@@ -200,6 +200,8 @@
   "layer_gap": 0.12,
   "insulation_u": 0.75,
   "below_temp": 15.0,
-  "h_surface": 10.8
+  "h_core": 10.0,
+  "h_perim": 12.5,
+  "perim_width": 1.0
  }
 }

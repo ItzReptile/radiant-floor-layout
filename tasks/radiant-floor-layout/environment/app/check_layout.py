@@ -13,7 +13,9 @@ Floor model (two screed layers on the plan's grid, cell size = grid):
   pipe layer:    lateral conduction, heat from the pipes, heat to the surface layer, heat down
                  through the insulation to the slab below
   surface layer: lateral conduction, heat from the pipe layer, heat to the room air through
-                 the room's floor finish and the surface film
+                 the room's floor finish and the surface film. The film coefficient is h_perim
+                 on cells within perim_width of the building's outer walls (cold exterior
+                 walls and windows draw more heat from the floor there) and h_core elsewhere
   water:         every loop is split into grid-length steps; each step exchanges heat with
                  the pipe-layer cell it lies in, and the water carries heat downstream:
                      mcp * (T[k-1] - T[k]) = g * (T[k] - T_cell)
@@ -42,7 +44,7 @@ Plan format (lengths in metres, temperatures in C):
   pipe            {min_spacing, min_segment, max_loop_length, port_pitch}
   physics         {supply_temp, flow_constant, flow_offset, g_pipe, sleeve_length, sleeve_factor,
                   k_screed, pipe_layer, surface_layer, layer_gap, insulation_u, below_temp,
-                  h_surface}
+                  h_core, h_perim, perim_width}
 
 Layout format: {"loops": [{"slot": k, "path": [[x, y], ...]}, ...]}
 """
@@ -272,7 +274,13 @@ def solve_heat(plan: dict, loops: list[dict], floor: Floor) -> dict:
     rooms = plan["rooms"]
     room_flat = floor.room_of.ravel()
     air = np.array([r["air_temp"] for r in rooms])[room_flat]
-    g_room = np.array([area / (r.get("floor_r", 0.0) + 1.0 / ph["h_surface"]) for r in rooms])[room_flat]
+    # surface film: h_perim within perim_width of the outer walls, h_core elsewhere
+    bx0, by0, bx1, by1 = plan["building"]
+    xs_m, ys_m = floor.xs * g, floor.ys * g
+    edge = np.minimum(np.minimum(ys_m - by0, by1 - ys_m)[:, None], np.minimum(xs_m - bx0, bx1 - xs_m)[None, :])
+    h = np.where(edge <= ph["perim_width"] + EPS, ph["h_perim"], ph["h_core"]).ravel()
+    floor_r = np.array([r.get("floor_r", 0.0) for r in rooms])[room_flat]
+    g_room = area / (floor_r + 1.0 / h)
     k_bot = ph["k_screed"] * ph["pipe_layer"]
     k_top = ph["k_screed"] * ph["surface_layer"]
     g_vert = ph["k_screed"] / ph["layer_gap"] * area
@@ -342,7 +350,6 @@ def solve_heat(plan: dict, loops: list[dict], floor: Floor) -> dict:
     surface = t[n:2 * n].reshape(ny, nx)
 
     results = []
-    xs_m, ys_m = floor.xs * g, floor.ys * g
     for ri, room in enumerate(rooms):
         sel = floor.room_of == ri
         out_w = float((g_room.reshape(ny, nx)[sel] * (surface[sel] - room["air_temp"])).sum())
