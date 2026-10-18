@@ -1,0 +1,21 @@
+Official Trial 1 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (commit 281d52a)
+job: jobs/radiant-opus-run1/2026-10-18__10-52-35 (local Harbor 0.24.0, docker)
+command: harbor run -p tasks/radiant-floor-layout --agent claude-code --model anthropic/claude-opus-5-5
+         --ak reasoning_effort=max --ae CLAUDE_FORCE_OAUTH=1 --ae CLAUDE_CODE_OAUTH_TOKEN=... --ae CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000 --env docker
+agent ran 10:55-15:31 local (4 h 36 min of the 6 h limit) and stopped on its own; exception_info null, no timeout, no auth or rate-limit errors
+reward: 0. Verifier: 12 tests passed, 1 failed:
+  case-00: bed1 output_max (output 262 W, window [206, 258]; peak 26.50/29.0, spread 2.69/3.1)
+  bed1 is the bedroom that heats the study in series
+
+What the agent built (7 modules, /app/solver): its own copy of the heat model (heat.py), geometry checks, plan
+canonicalisation, spanning-tree counterflow coverage (stc.py), hall routing (layout.py), a tuner (tune.py).
+It wrote its own random plan generator ("floor plans resembling the samples, for robustness testing") and
+tuned against 28 self-made plans; it passed all 3 samples from the 90-minute mark on and finished believing
+its solver was done ("All three samples pass (2.8-4.4 s each)").
+
+Read-only peeks (its /app/solver copied out and run on the 12 held-out plans in a separate container, 40 s limit):
+  12:21 (1h29)  8/12   case-00 hall spread; case-05 bed2 output; case-08 bed1 output; case-10 crash in its hall router
+  13:07 (2h15) 10/12   case-00 bed1 output_max + bath output_min; case-05 bed2 + study spread
+  13:53 (3h01) 10/12   case-00 bed1 output_max; case-11 study spread
+  14:40 (3h48) 10/12   case-00 bed1 output_max; case-01 bed1 output_max
+  15:26 (4h34) 11/12   case-00 bed1 output_max (262 W vs 258 W)
