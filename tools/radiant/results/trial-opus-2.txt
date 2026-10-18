@@ -1,0 +1,19 @@
+Official Trial 2 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since 281d52a)
+job: jobs/radiant-opus-run2/2026-10-18__15-41-10 (local Harbor 0.24.0, docker); same command as Trial 1
+agent ran 15:44-17:33 local (1 h 48 min of the 6 h limit) and stopped on its own; exception_info null, no timeout, no auth or rate-limit errors
+reward: 0. Verifier: 8 tests passed (entry point + 7 plans), 5 failed:
+  case-01: hall output_min (421 W, window [423, 528])
+  case-03: study output_max (186 W, window [148, 186]); hall max_spread (7.07 / 6.6)
+  case-05: bed2 output_max (289 W, window [165, 206])
+  case-06: kitchen output_min (358 W, window [372, 464])
+  case-09: hall output_max (516 W, window [385, 481]) and max_spread (6.90 / 6.8)
+
+What the agent built (8 modules): copy of the checker and its heat model (checker.py, sim.py), plan canonicalisation,
+spanning-tree coverage with spirals in rooms (stc.py), hall "comb" coverage, trunks and lanes (design.py, build.py).
+It treated the study as sharing its parent bedroom's loop, as intended.
+Its closing report: samples 3/3 (2-4 s); samples in all 8 orientations 22/24 under parallel load (24/24 alone);
+16/30 on its own random generator, "I can't promise every unseen plan will pass"; remaining failures it named:
+hall spread, the study slightly under-heated, two-loop rooms' spread.
+
+Read-only peek: 17:10 (1h29) 0/12 (every room under its heat minimum: room fill not yet wired in); it reached 7/12 in
+its last ~20 minutes and then stopped.
