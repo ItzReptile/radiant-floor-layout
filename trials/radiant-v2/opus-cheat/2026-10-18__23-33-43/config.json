@@ -1,0 +1,26 @@
+{
+    "job_name": "2026-10-18__23-33-43",
+    "jobs_dir": "C:\\Users\\user\\klavis\\jobs$1",
+    "agents": [
+        {
+            "name": "claude-code",
+            "model_name": "anthropic/claude-opus-5-5",
+            "kwargs": {
+                "reasoning_effort": "max"
+            },
+            "env": {
+                "CLAUDE_FORCE_OAUTH": "****",
+                "CLAUDE_CODE_OAUTH_TOKEN": "sk-a****wAA",
+                "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000"
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+        }
+    ],
+    "extra_instruction_paths": [
+        "C:\\Users\\user\\klavis\\vendor\\terminal-bench-3\\docs\\prompts\\hack-trial-prompt.md"
+    ]
+}

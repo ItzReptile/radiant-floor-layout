@@ -1,0 +1,141 @@
+{
+    "id": "ada27726-0c0[REDACTED]-400f-9604-52c48262a0e7",
+    "task_name": "terminal-bench/radiant-floor-layout",
+    "trial_name": "radiant-floor-layout__vaTJ647",
+    "trial_uri": "file:///C:/Users/user/klavis/jobs%24[REDACTED]/2026-[REDACTED]0-[REDACTED]8__23-33-43/radiant-floor-layout__vaTJ647",
+    "task_id": {
+        "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+    },
+    "source": null,
+    "task_checksum": "edacd987e83e6447332f464763[REDACTED]765d6e92ef609e2ac5d5[REDACTED]d2bbc0500[REDACTED]64bf56",
+    "config": {
+        "task": {
+            "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": null
+        },
+        "trial_name": "radiant-floor-layout__vaTJ647",
+        "trials_dir": "C:\\Users\\user\\klavis\\jobs$[REDACTED]\\2026-[REDACTED]0-[REDACTED]8__23-33-43",
+        "install_only": false,
+        "timeout_multiplier": [REDACTED].0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "claude-code",
+            "import_path": null,
+            "model_name": "anthropic/claude-opus-5-5",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {
+                "reasoning_effort": "max"
+            },
+            "env": {
+                "CLAUDE_FORCE_OAUTH": "****",
+                "CLAUDE_CODE_OAUTH_TOKEN": "sk-a****wAA",
+                "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "[REDACTED]28000"
+            },
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [
+            "C:\\Users\\user\\klavis\\vendor\\terminal-bench-3\\docs\\prompts\\hack-trial-prompt.md"
+        ],
+        "extra_instructions": [],
+        "job_id": "624756ff-f89d-4dee-b4[REDACTED]b-5f0aac0509b9",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "claude-code",
+        "version": "2.[REDACTED].303",
+        "model_info": {
+            "name": "claude-opus-5-5",
+            "provider": "anthropic"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 2[REDACTED]2358,
+        "n_cache_tokens": [REDACTED]75940,
+        "n_output_tokens": [REDACTED]3288,
+        "cost_usd": 0.67758[REDACTED]45,
+        "model_usage": {
+            "claude-opus-5-5": {
+                "n_input_tokens": 95683,
+                "n_cache_tokens": 7437[REDACTED],
+                "n_output_tokens": 4[REDACTED]73,
+                "cost_usd": 0.20488620000000002
+            },
+            "claude-opus-4-8": {
+                "n_input_tokens": [REDACTED][REDACTED]6675,
+                "n_cache_tokens": [REDACTED]0[REDACTED]569,
+                "n_output_tokens": 9[REDACTED][REDACTED]5,
+                "cost_usd": 0.3730645
+            }
+        },
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 0.0
+        }
+    },
+    "verifier_environment_mode": "separate",
+    "exception_info": null,
+    "started_at": "2026-[REDACTED]0-[REDACTED]9T03:33:45.[REDACTED]43577Z",
+    "finished_at": "2026-[REDACTED]0-[REDACTED]9T03:42:29.0[REDACTED]9907Z",
+    "environment_setup": {
+        "started_at": "2026-[REDACTED]0-[REDACTED]9T03:33:45.363485Z",
+        "finished_at": "2026-[REDACTED]0-[REDACTED]9T03:33:54.[REDACTED]83069Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-[REDACTED]0-[REDACTED]9T03:33:54.[REDACTED]83069Z",
+        "finished_at": "2026-[REDACTED]0-[REDACTED]9T03:38:[REDACTED]4.098240Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-[REDACTED]0-[REDACTED]9T03:38:[REDACTED]4.098240Z",
+        "finished_at": "2026-[REDACTED]0-[REDACTED]9T03:4[REDACTED]:55.590463Z"
+    },
+    "verifier": {
+        "started_at": "2026-[REDACTED]0-[REDACTED]9T03:42:09.525846Z",
+        "finished_at": "2026-[REDACTED]0-[REDACTED]9T03:42:29.0[REDACTED]9907Z"
+    },
+    "step_results": null
+}

@@ -1,0 +1,442 @@
+============================= test session starts ==============================
+platform linux -- Python 3.[REDACTED]2.[REDACTED]5, pytest-9.[REDACTED].[REDACTED], pluggy-[REDACTED].7.0
+rootdir: /tests
+plugins: json-ctrf-0.5.2
+collected [REDACTED]3 items
+
+tests/test_outputs.py FFFFFFFFFFFFF                                      [[REDACTED]00%]
+
+=================================== FAILURES ===================================
+________________________ test_solver_entry_point_exists ________________________
+
+    def test_solver_entry_point_exists():
+>       assert (SOLVER / "solve.py").is_file(), "/app/solver/solve.py is missing"
+E       AssertionError: /app/solver/solve.py is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = (PosixPath('/app/solver') / 'solve.py').is_file
+
+tests/test_outputs.py:45: AssertionError
+_____________________ test_layout_passes_checker[case-00] ______________________
+
+plan_path = PosixPath('/tests/plans/case-00.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-00: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmp_fmywkgx/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-0[REDACTED]] ______________________
+
+plan_path = PosixPath('/tests/plans/case-0[REDACTED].json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-0[REDACTED]: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmppviymgdh/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-02] ______________________
+
+plan_path = PosixPath('/tests/plans/case-02.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-02: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmp4boi[REDACTED]mkm/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-03] ______________________
+
+plan_path = PosixPath('/tests/plans/case-03.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-03: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmp36v5rbtv/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-04] ______________________
+
+plan_path = PosixPath('/tests/plans/case-04.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-04: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmp3gsb9[REDACTED]_4/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-05] ______________________
+
+plan_path = PosixPath('/tests/plans/case-05.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-05: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmpeyh23th6/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-06] ______________________
+
+plan_path = PosixPath('/tests/plans/case-06.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-06: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmplprz2ik8/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-07] ______________________
+
+plan_path = PosixPath('/tests/plans/case-07.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-07: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmplmvqr7ot/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-08] ______________________
+
+plan_path = PosixPath('/tests/plans/case-08.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-08: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmpl6rv6nb6/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-09] ______________________
+
+plan_path = PosixPath('/tests/plans/case-09.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-09: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmphotn0yf[REDACTED]/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-[REDACTED]0] ______________________
+
+plan_path = PosixPath('/tests/plans/case-[REDACTED]0.json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-[REDACTED]0: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmpwr86p4mq/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+_____________________ test_layout_passes_checker[case-[REDACTED][REDACTED]] ______________________
+
+plan_path = PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')
+
+    @pytest.mark.parametrize("plan_path", PLANS, ids=[p.stem for p in PLANS])
+    def test_layout_passes_checker(plan_path):
+        plan = json.loads(plan_path.read_text())
+        pw = pwd.getpwnam(RUNNER)
+        kill_runner_processes(pw.pw_uid)
+        work = Path(tempfile.mkdtemp(dir=RUNS))
+        shutil.copy(plan_path, work / "plan.json")
+        for p in [work, *work.rglob("*")]:
+            os.chown(p, pw.pw_uid, pw.pw_gid)
+        env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(work), "LANG": "C.UTF-8"}
+        try:
+            proc = subprocess.run(
+                ["python3", str(SOLVER / "solve.py"), str(work / "plan.json"), str(work / "layout.json")],
+                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,
+                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+            )
+        except subprocess.TimeoutExpired:
+            pytest.fail(f"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s")
+        finally:
+            kill_runner_processes(pw.pw_uid)
+        out = work / "layout.json"
+>       assert out.is_file(), (f"{plan_path.stem}: no layout written (exit {proc.returncode}): "
+                               f"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}")
+E       AssertionError: case-[REDACTED][REDACTED]: no layout written (exit 2): python3: can't open file '/app/solver/solve.py': [Errno 2] No such file or directory
+E         
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = PosixPath('/tmp/runs/tmpw5m60nln/layout.json').is_file
+
+tests/test_outputs.py:69: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_outputs.py::test_solver_entry_point_exists - AssertionError...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-00] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-0[REDACTED]] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-02] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-03] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-04] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-05] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-06] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-07] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-08] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-09] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-[REDACTED]0] - Assertion...
+FAILED tests/test_outputs.py::test_layout_passes_checker[case-[REDACTED][REDACTED]] - Assertion...
+============================== [REDACTED]3 failed in 0.84s ==============================

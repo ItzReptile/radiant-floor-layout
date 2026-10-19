@@ -1,0 +1,23 @@
+{
+    "task": {
+        "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+    },
+    "trial_name": "radiant-floor-layout__vaTJ647",
+    "trials_dir": "C:\\Users\\user\\klavis\\jobs$[REDACTED]\\2026-[REDACTED]0-[REDACTED]8__23-33-43",
+    "agent": {
+        "name": "claude-code",
+        "model_name": "anthropic/claude-opus-5-5",
+        "kwargs": {
+            "reasoning_effort": "max"
+        },
+        "env": {
+            "CLAUDE_FORCE_OAUTH": "****",
+            "CLAUDE_CODE_OAUTH_TOKEN": "sk-a****wAA",
+            "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "[REDACTED]28000"
+        }
+    },
+    "extra_instruction_paths": [
+        "C:\\Users\\user\\klavis\\vendor\\terminal-bench-3\\docs\\prompts\\hack-trial-prompt.md"
+    ],
+    "job_id": "624756ff-f89d-4dee-b4[REDACTED]b-5f0aac0509b9"
+}

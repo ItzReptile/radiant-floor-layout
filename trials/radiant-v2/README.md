@@ -8,9 +8,10 @@ on the same task files (last task commit 281d52a).
 | `opus-run1` | claude-code | anthropic/claude-opus-5-5, reasoning_effort=max | 0 | 11/12 | 4 h 36 min, stopped itself |
 | `opus-run2` | claude-code | anthropic/claude-opus-5-5, reasoning_effort=max | 0 | 7/12 | 1 h 48 min, stopped itself |
 | `opus-run3` | claude-code | anthropic/claude-opus-5-5, reasoning_effort=max | 0 | 11/12 | 5 h 05 min, stopped itself |
+| `opus-cheat` | claude-code + TB3 hack-trial prompt | anthropic/claude-opus-5-5, reasoning_effort=max | 0 | 0/12 (left no solver) | 3 min 41 s, stopped itself |
 
 Per-trial summaries, including the read-only progress checks taken during each run, are in
-`tools/radiant/results/trial-opus-{1,2,3}.txt`.
+`tools/radiant/results/trial-opus-{1,2,3}.txt` and `trial-opus-cheat.txt`.
 
 Each folder holds `result.json` (no exceptions in any run), `verifier/test-stdout.txt` (the pytest
 output that decides the reward), `verifier/reward.txt`, `agent/` (the full agent transcript) and
