@@ -19,7 +19,7 @@ See [instruction.md](instruction.md) for the full task instruction. Additional i
 This is the job of an underfloor-heating designer: lay hot-water pipe loops into an apartment's
 floor so that every room gets the heat it needs, no floor gets too hot, rooms are evenly
 warm, and the pipes can actually be installed. The agent has to write a general solver,
-because it is graded on floor plans it has never seen, within 40 seconds per plan.
+because it is graded on floor plans it has never seen, within 15 seconds per plan.
 
 Nothing is hidden: the checker in `/app` states every rule and computes every number. The
 difficulty is that the constraints are coupled across the whole apartment, so a solution
@@ -71,7 +71,7 @@ a canonical frame, then:
    a snake-shaped spanning tree over 2x2-cell blocks and runs the pipe around it
    (spanning-tree coverage), so supply and return lie side by side everywhere.
 5. Picks each zone's core and perimeter pitch by evaluating candidate layouts with the
-   checker (about 12 evaluations, under 25 s).
+   checker (6 to 12 evaluations: at least 6, more while under 5 s; typically 4-6 s per plan in all).
 
 ## Verification explanation
 
@@ -85,7 +85,7 @@ passes it, and if four baselines that each drop one idea of the reference fail i
 pitch per room; a naive serpentine; hall leaders packed against either wall).
 
 The agent's `/app/solver/solve.py` runs on each plan as an unprivileged user that cannot
-read `/tests`, with 40 s per plan. Its layout is judged by the verifier's own copy of the
+read `/tests`, with 15 s per plan. Its layout is judged by the verifier's own copy of the
 checker, and every plan must pass for a reward of 1.
 
 ## Relevant experience

@@ -695,7 +695,7 @@ def next_combo(combo, combos, out_low, out_high, spread_bad, tried):
 
 
 def solve_canonical(plan, evaluate, targets=None, combos=COMBOS, sweep=None, lanes="spread", fill=None,
-                    max_evals=12, time_budget=25.0, hall_ends=True, spread_goal=None, respread=True):
+                    max_evals=12, time_budget=5.0, hall_ends=True, spread_goal=None, respread=True, min_evals=6):
     """Pick (core, perimeter) pitches per room: evaluate a few for all rooms at once, keep each
     room's best, then refine the worst room step by step. targets: optional {room id: watts}
     to aim at instead of the plan's windows."""
@@ -732,7 +732,7 @@ def solve_canonical(plan, evaluate, targets=None, combos=COMBOS, sweep=None, lan
     choice = [min(results, key=lambda c: zscore(z, results[c])) for z in zones]
     tried = [set([c]) for c in choice]
     best = None
-    while evals < max_evals and time.time() - t0 < time_budget:
+    while evals < max_evals and (best is None or evals < min_evals or time.time() - t0 < time_budget):
         evals += 1
         try:
             layout, rep = run(choice)
@@ -840,7 +840,7 @@ def transform_plan(plan, t):
     return q
 
 
-def solve(plan, evaluate, targets=None, **kw):
+def solve(plan, evaluate, targets=None, final_check=True, **kw):
     if plan["building"][0] != 0 or plan["building"][1] != 0:
         raise ValueError("building must start at the origin")
     t = canonical_transform(plan)
@@ -848,18 +848,21 @@ def solve(plan, evaluate, targets=None, **kw):
     layout, _ = solve_canonical(canon, evaluate, targets, **kw)
     out = {"loops": [{"slot": lp["slot"], "path": [list(_tf_inv_point(t, x, y)) for x, y in lp["path"]]}
                      for lp in layout["loops"]]}
-    return out, evaluate(plan, out)
+    return out, (evaluate(plan, out) if final_check else None)
 
 
 def main():
     here = Path(__file__).resolve().parent
     sys.path.insert(0, str(here))
-    from check_layout import evaluate
+    import check_layout
+    from scipy.sparse.linalg import splu
+    # same equations as the checker; this fill-reducing ordering solves them about a third faster
+    check_layout.spsolve = lambda a, b: splu(a.tocsc(), permc_spec="MMD_AT_PLUS_A").solve(b)
+    evaluate = check_layout.evaluate
     plan = json.load(open(sys.argv[1]))
-    layout, rep = solve(plan, evaluate)
+    layout, _ = solve(plan, evaluate, final_check=False)
     with open(sys.argv[2], "w") as f:
         json.dump(layout, f)
-    print("passed" if rep["passed"] else "not passed")
 
 
 if __name__ == "__main__":
