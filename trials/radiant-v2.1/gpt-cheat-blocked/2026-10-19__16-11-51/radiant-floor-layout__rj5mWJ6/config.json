@@ -1,0 +1,18 @@
+{
+    "task": {
+        "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+    },
+    "trial_name": "radiant-floor-layout__rj5mWJ6",
+    "trials_dir": "C:\\Users\\user\\klavis\\jobs\\radiant-v2.1-gpt-cheat\\2026-10-19__16-11-51",
+    "agent": {
+        "name": "codex",
+        "model_name": "openai/gpt-6.1-sol",
+        "kwargs": {
+            "reasoning_effort": "xhigh"
+        }
+    },
+    "extra_instruction_paths": [
+        "C:\\Users\\user\\klavis\\vendor\\terminal-bench-3\\docs\\prompts\\hack-trial-prompt.md"
+    ],
+    "job_id": "4d404dec-3e87-4def-af11-2103df7754fa"
+}
