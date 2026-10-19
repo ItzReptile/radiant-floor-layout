@@ -1,0 +1,19 @@
+Official Codex Trial 1: codex, openai/gpt-6.1-sol, reasoning_effort=xhigh, radiant-floor-layout v2 (task unchanged since 281d52a)
+job: jobs/radiant-gpt-run1/2026-10-18__23-40-58 (local Harbor 0.24.0, docker)
+command: CODEX_FORCE_AUTH_JSON=1 harbor run -p tasks/radiant-floor-layout --agent codex --model openai/gpt-6.1-sol
+         --ak reasoning_effort=xhigh --env docker   (ChatGPT login from ~/.codex/auth.json; smoke-tested first)
+
+OUTCOME: SOLVED. At the 02:53 read-only peek (3 h 12 min into the run) the agent's /app/solver passed all 12 held-out plans,
+so the run was aborted at once, as agreed (abort only at 12/12). The trial therefore has no verifier result of its own.
+Confirmation: the solver snapshot from that peek was re-run under verifier-like conditions (one plan at a time, 2 CPUs,
+40 s limit, the verifier's own checker copy): 12/12, each plan 9.3-24.3 s. The 7 code files it needs (solve, fine,
+joint, local, model, optimize, thermal; 136 KB) reproduce 12/12 on their own and are kept in
+trials/radiant-v2/gpt-run1/solver-at-12of12/ (the live folder also held 80 MB of the agent's debug state files).
+
+Read-only peeks (12 held-out plans, 40 s limit):
+  01:04 (1h24) 11/12   case-01 living/bed1/bed2/hall heat and spread
+  01:26 (1h46) 11/12   case-00 hall output_max
+  01:48 (2h07) 11/12   case-00 hall output_max
+  02:09 (2h29)  8/12   case-00/06 hall output_max; case-01/02 bed1 + study output_max (mid-change)
+  02:31 (2h51) 10/12   case-01 bed1 + study output_max; case-06 bed1 + hall output_max
+  02:53 (3h12) 12/12   -> run aborted; Codex trials 2-3 and the Codex /cheat trial were not started (chain halted)

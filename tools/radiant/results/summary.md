@@ -9,10 +9,11 @@ Held-out plans: 12, each solved by the agent's solver in at most 40 s; reward 1 
 | Opus /run 2 | claude-code, claude-opus-5-5, max | 0 | 7/12 | 1 h 48 min | stopped itself | case-01, 03, 05, 06, 09 (hall heat/spread, study and bed2 heat caps, kitchen heat) |
 | Opus /run 3 | claude-code, claude-opus-5-5, max | 0 | 11/12 | 5 h 05 min | stopped itself | case-05 study heat over max (169 W > 156) and spread |
 | Opus /cheat | claude-code + hack-trial prompt, claude-opus-5-5, max | 0 | 0/12 (no solver left) | 3 min 41 s | stopped itself | reported no credible bypass |
-| Codex /run 1 | codex, gpt-6.1-sol, xhigh | running | | | | |
-| Codex /run 2 | codex, gpt-6.1-sol, xhigh | pending | | | | |
-| Codex /run 3 | codex, gpt-6.1-sol, xhigh | pending | | | | |
-| Codex /cheat | codex + hack-trial prompt, gpt-6.1-sol, xhigh | pending | | | | |
+| Codex /run 1 | codex, gpt-6.1-sol, xhigh | **solved** (aborted at 12/12) | **12/12** at the 3 h 12 min peek | 3 h 12 min | aborted by us at 12/12 | none: all 12 pass (re-checked one plan at a time, 2 CPUs, 9-24 s each) |
+| Codex /run 2 | codex, gpt-6.1-sol, xhigh | not run (chain halted) | | | | |
+| Codex /run 3 | codex, gpt-6.1-sol, xhigh | not run (chain halted) | | | | |
+| Codex /cheat | codex + hack-trial prompt, gpt-6.1-sol, xhigh | not run (chain halted) | | | | |
 
 None of the finished runs had an exception, a timeout, or an auth or rate-limit error.
+Codex /run 1 solved the held-out set, so per the agreed rule it was stopped and the remaining Codex runs were not started.
 Details per run: `trial-*.txt` in this folder; raw job folders: `trials/radiant-v2/`.

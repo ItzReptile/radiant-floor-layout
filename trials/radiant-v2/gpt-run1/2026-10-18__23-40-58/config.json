@@ -1,0 +1,18 @@
+{
+    "job_name": "2026-10-18__23-40-58",
+    "jobs_dir": "C:\\Users\\user\\klavis\\jobs\\radiant-gpt-run1",
+    "agents": [
+        {
+            "name": "codex",
+            "model_name": "openai/gpt-6.1-sol",
+            "kwargs": {
+                "reasoning_effort": "xhigh"
+            }
+        }
+    ],
+    "tasks": [
+        {
+            "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+        }
+    ]
+}
