@@ -1,0 +1,1 @@
+- [UFH solver project](ufh-solver-project.md) — architecture + physics findings for /app/solver task

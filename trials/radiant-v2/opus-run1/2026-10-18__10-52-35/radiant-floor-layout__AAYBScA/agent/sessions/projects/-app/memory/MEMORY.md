@@ -1,0 +1,1 @@
+- [UFH solver design](ufh-solver-design.md) — physics findings + STC-tree design for /app/solver task

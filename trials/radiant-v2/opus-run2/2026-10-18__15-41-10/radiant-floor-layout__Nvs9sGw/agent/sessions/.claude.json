@@ -1,0 +1,24 @@
+{
+  "firstStartTime": "2026-[REDACTED]0-[REDACTED]8T[REDACTED]9:44:25.5[REDACTED]7Z",
+  "firstStartVersion": "2.[REDACTED].302",
+  "machineID": "756de08[REDACTED]bd9e2cb2943ec[REDACTED]4b80fba70f6c755898d5d908b35a9302[REDACTED]d5f2adebf",
+  "opusProMigrationComplete": true,
+  "sonnet[REDACTED]m45MigrationComplete": true,
+  "seenNotifications": {},
+  "hasResetAutoModeOptInForDefaultOffer": true,
+  "migrationVersion": [REDACTED]4,
+  "userID": "cddc289c86476e803a39743e2d6c05678c7cc88f58e4eb[REDACTED]57b0[REDACTED]f9b4e77c497e",
+  "pluginUsage": {
+    "cc-plugin-agents-md@builtin": {
+      "usageCount": 0,
+      "lastUsedAt": [REDACTED]792352666024,
+      "lastUsedNumStartups": 0
+    },
+    "cc-plugin-plugin-authoring@builtin": {
+      "usageCount": 0,
+      "lastUsedAt": [REDACTED]792352666024,
+      "lastUsedNumStartups": 0
+    }
+  },
+  "cachedExtraUsageDisabledReason": "org_level_disabled"
+}

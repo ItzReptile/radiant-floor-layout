@@ -1,0 +1,20 @@
+{
+    "task": {
+        "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+    },
+    "trial_name": "radiant-floor-layout__AAYBScA",
+    "trials_dir": "C:\\Users\\user\\klavis\\jobs\\radiant-opus-run[REDACTED]\\2026-[REDACTED]0-[REDACTED]8__[REDACTED]0-52-35",
+    "agent": {
+        "name": "claude-code",
+        "model_name": "anthropic/claude-opus-5-5",
+        "kwargs": {
+            "reasoning_effort": "max"
+        },
+        "env": {
+            "CLAUDE_FORCE_OAUTH": "****",
+            "CLAUDE_CODE_OAUTH_TOKEN": "sk-a****wAA",
+            "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "[REDACTED]28000"
+        }
+    },
+    "job_id": "[REDACTED]72b7d38-520c-4054-bb0f-63fc88759758"
+}

@@ -1,0 +1,1 @@
+- [UFH solver approach](ufh-solver-approach.md) — architecture + lessons for /app/solver underfloor heating task

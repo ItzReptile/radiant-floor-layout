@@ -1,0 +1,185 @@
+{
+    "reportFormat": "CTRF",
+    "specVersion": "0.0.0",
+    "timestamp": "2026-[REDACTED]0-[REDACTED]9T03:09:[REDACTED]8.547566+00:00",
+    "generatedBy": "pytest",
+    "results": {
+        "tool": {
+            "name": "pytest",
+            "version": "9.[REDACTED].[REDACTED]"
+        },
+        "summary": {
+            "tests": [REDACTED]3,
+            "passed": [REDACTED]2,
+            "failed": [REDACTED],
+            "skipped": 0,
+            "pending": 0,
+            "other": 0,
+            "start": [REDACTED]792379225334,
+            "stop": [REDACTED]792379358545
+        },
+        "environment": {
+            "buildName": "Pytest JSON CTRF Report",
+            "buildNumber": "000",
+            "buildUrl": "https://ctrf.io"
+        },
+        "tests": [
+            {
+                "name": "test_outputs.py::test_solver_entry_point_exists",
+                "status": "passed",
+                "duration": 4,
+                "start": [REDACTED]792379225767,
+                "stop": [REDACTED]79237922577[REDACTED],
+                "retries": 0,
+                "file_path": "test_outputs.py"
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": 744[REDACTED],
+                "start": [REDACTED]79237922577[REDACTED],
+                "stop": [REDACTED]7923792332[REDACTED]2,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": 7867,
+                "start": [REDACTED]7923792332[REDACTED]2,
+                "stop": [REDACTED]79237924[REDACTED]079,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": 8203,
+                "start": [REDACTED]79237924[REDACTED]079,
+                "stop": [REDACTED]792379249282,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED]0[REDACTED]24,
+                "start": [REDACTED]792379249283,
+                "stop": [REDACTED]792379259407,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED]0297,
+                "start": [REDACTED]792379259407,
+                "stop": [REDACTED]792379269704,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "failed",
+                "raw_status": "call_failed",
+                "duration": 26603,
+                "start": [REDACTED]792379269705,
+                "stop": [REDACTED]792379296308,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ],
+                "trace": "plan_path = PosixPath('/tests/plans/case-05.json')\n\n    @pytest.mark.parametrize(\"plan_path\", PLANS, ids=[p.stem for p in PLANS])\n    def test_layout_passes_checker(plan_path):\n        plan = json.loads(plan_path.read_text())\n        pw = pwd.getpwnam(RUNNER)\n        kill_runner_processes(pw.pw_uid)\n        work = Path(tempfile.mkdtemp(dir=RUNS))\n        shutil.copy(plan_path, work / \"plan.json\")\n        for p in [work, *work.rglob(\"*\")]:\n            os.chown(p, pw.pw_uid, pw.pw_gid)\n        env = {\"PATH\": \"/usr/local/bin:/usr/bin:/bin\", \"HOME\": str(work), \"LANG\": \"C.UTF-8\"}\n        try:\n            proc = subprocess.run(\n                [\"python3\", str(SOLVER / \"solve.py\"), str(work / \"plan.json\"), str(work / \"layout.json\")],\n                cwd=work, env=env, capture_output=True, timeout=TIMEOUT_S,\n                user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],\n            )\n        except subprocess.TimeoutExpired:\n            pytest.fail(f\"{plan_path.stem}: the solver did not finish within {TIMEOUT_S} s\")\n        finally:\n            kill_runner_processes(pw.pw_uid)\n        out = work / \"layout.json\"\n        assert out.is_file(), (f\"{plan_path.stem}: no layout written (exit {proc.returncode}): \"\n                               f\"{proc.stderr[-[REDACTED]500:].decode(errors='replace')}\")\n        try:\n            layout = json.loads(out.read_text())\n        except (ValueError, UnicodeDecodeError) as e:\n            pytest.fail(f\"{plan_path.stem}: layout is not valid JSON ({e})\")\n        finally:\n            shutil.rmtree(work, ignore_errors=True)\n        try:\n            report = evaluate(plan, layout)\n        except LayoutError as e:\n            pytest.fail(f\"{plan_path.stem}: {e}\")\n        if report[\"geometry_problems\"]:\n            pytest.fail(f\"{plan_path.stem}: \" + \"; \".join(report[\"geometry_problems\"][:5]))\n        failed = [f\"{r['id']} {k} (output {r['output_w']:.0f} W in [{r['required_w']}, {r['max_w']}], \"\n                  f\"peak {r['max_surface']:.2f}/{r['limit_surface']}, spread {r['zone_spread']:.2f}/{r['limit_spread']})\"\n                  for r in report[\"rooms\"] for k, ok in r[\"checks\"].items() if not ok]\n>       assert report[\"passed\"], f\"{plan_path.stem}: \" + \"; \".join(failed)\nE       AssertionError: case-05: study output_max (output [REDACTED]69 W in [[REDACTED]25, [REDACTED]56], peak 26.70/29.0, spread 2.39/2.2); study max_spread (output [REDACTED]69 W in [[REDACTED]25, [REDACTED]56], peak 26.70/29.0, spread 2.39/2.2)\nE       assert False\n\ntests/test_outputs.py:86: AssertionError",
+                "message": "The test failed in the call phase due to an assertion error"
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED]3[REDACTED]37,
+                "start": [REDACTED]792379296308,
+                "stop": [REDACTED]792379309445,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED]00[REDACTED]8,
+                "start": [REDACTED]792379309446,
+                "stop": [REDACTED]7923793[REDACTED]9464,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": 92[REDACTED]5,
+                "start": [REDACTED]7923793[REDACTED]9464,
+                "stop": [REDACTED]792379328679,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED][REDACTED][REDACTED]78,
+                "start": [REDACTED]792379328679,
+                "stop": [REDACTED]792379339857,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": 8450,
+                "start": [REDACTED]792379339857,
+                "stop": [REDACTED]792379348307,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            },
+            {
+                "name": "test_outputs.py::test_layout_passes_checker",
+                "status": "passed",
+                "duration": [REDACTED]0237,
+                "start": [REDACTED]792379348308,
+                "stop": [REDACTED]792379358545,
+                "retries": 0,
+                "file_path": "test_outputs.py",
+                "tags": [
+                    "parametrize::plan_path::[PosixPath('/tests/plans/case-00.json'), PosixPath('/tests/plans/case-0[REDACTED].json'), PosixPath('/tests/plans/case-02.json'), PosixPath('/tests/plans/case-03.json'), PosixPath('/tests/plans/case-04.json'), PosixPath('/tests/plans/case-05.json'), PosixPath('/tests/plans/case-06.json'), PosixPath('/tests/plans/case-07.json'), PosixPath('/tests/plans/case-08.json'), PosixPath('/tests/plans/case-09.json'), PosixPath('/tests/plans/case-[REDACTED]0.json'), PosixPath('/tests/plans/case-[REDACTED][REDACTED].json')]::ids_['case-00', 'case-0[REDACTED]', 'case-02', 'case-03', 'case-04', 'case-05', 'case-06', 'case-07', 'case-08', 'case-09', 'case-[REDACTED]0', 'case-[REDACTED][REDACTED]']"
+                ]
+            }
+        ]
+    }
+}
