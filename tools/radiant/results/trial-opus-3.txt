@@ -1,0 +1,21 @@
+Official Trial 3 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since 281d52a)
+job: jobs/radiant-opus-run3/2026-10-18__17-58-05 (local Harbor 0.24.0, docker); same command as Trials 1 and 2
+agent ran 18:01-23:06 local (5 h 05 min of the 6 h limit) and stopped on its own; exception_info null, no timeout, no auth or rate-limit errors
+reward: 0. Verifier: 12 tests passed (entry point + 11 plans), 1 failed:
+  case-05: study output_max (169 W, window [125, 156]) and max_spread (2.39 / 2.2)
+  the study is heated in series through bed2 in this plan
+
+What the agent built (9 modules): heat model copy run per room plus a border (heat.py), canonical frame, inward
+counterflow spirals (stc.py, fill.py), hall trunks with detours tuned to the hall's heat window, an optimizer, two
+forked workers sized to the 2-CPU quota. It served the study through its bedroom's loop, as intended.
+Its closing report: samples 24/24 in all orientations (6-15 s); "on plans I generated myself, about 1 in 6 still fail,
+so not every unseen plan is guaranteed to pass" (its memory: ~84% on its harder generated sets; remaining failures
+hall spread and output near-misses).
+
+Read-only peeks (12 held-out plans, 40 s limit):
+  19:28 (1h30)  6/12   case-00/03 study spread; case-04 study output_max; case-05 bed2 output_max + study spread;
+                       case-08 bed2 spread; case-11 hall output_max
+  20:14 (2h16)  8/12   case-05 study output_max; case-06/07/11 hall output_max
+  21:00 (3h02)  9/12   case-05 study output_max; case-07/11 hall output_max
+  21:47 (3h49) 11/12   case-05 study output_max (171 W vs 156)
+  22:09, 22:30 11/12   case-05 study output_max;  22:50 11/12 case-05 study output_max + spread
