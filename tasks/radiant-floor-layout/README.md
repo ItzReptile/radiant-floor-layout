@@ -90,4 +90,7 @@ checker, and every plan must pass for a reward of 1.
 
 ## Relevant experience
 
-TODO(Jose): your relevant experience.
+Full-stack software engineer and frontend engineering coach (JavaScript/TypeScript, React,
+Next.js, Remix, Rust, WebAssembly, Docker, Linux self-hosting), creator of NikkoSets (a
+Rust/Leptos/WebAssembly study platform), with hands-on experience building and red-teaming 12
+Terminal-Bench evaluation environments using automated multi-baseline verification gates.
