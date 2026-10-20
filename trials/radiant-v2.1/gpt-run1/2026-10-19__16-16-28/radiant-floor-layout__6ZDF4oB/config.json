@@ -1,0 +1,15 @@
+{
+    "task": {
+        "path": "C:\\Users\\user\\klavis\\.claude\\worktrees\\terminal-bench-task-design-928745\\tasks\\radiant-floor-layout"
+    },
+    "trial_name": "radiant-floor-layout__6ZDF4oB",
+    "trials_dir": "C:\\Users\\user\\klavis\\jobs\\radiant-v2.1-gpt-run1\\2026-10-19__16-16-28",
+    "agent": {
+        "name": "codex",
+        "model_name": "openai/gpt-6.1-sol",
+        "kwargs": {
+            "reasoning_effort": "xhigh"
+        }
+    },
+    "job_id": "75601dc3-9909-447f-a7b0-33ddc9df4b28"
+}

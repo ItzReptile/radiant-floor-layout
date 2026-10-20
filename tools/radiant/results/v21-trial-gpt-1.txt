@@ -1,0 +1,35 @@
+radiant-floor-layout v2.1 (f21aa97): Official Codex Trial 1, GPT-6.1 Sol (xhigh), jobs/radiant-v2.1-gpt-run1
+Command: harbor run -p tasks/radiant-floor-layout --agent codex --model openai/gpt-6.1-sol --ak reasoning_effort=xhigh --env docker
+         (host env CODEX_FORCE_AUTH_JSON=1: the ChatGPT login). Ran alone on the machine; Docker checked before start.
+Started 2026-10-19 16:16:26 EDT.
+
+Result: SOLVED. GPT-6.1's solver passed all 12 held-out plans at 21:33 (about 5 h 15 min into the run).
+  Stopped by us at 21:35 as agreed (container paused, /app saved, container removed, harbor killed).
+  Harbor's own reward of 0 / NetworkConnectionError is an artifact of that stop: the solver was gone when its
+  verifier ran ("13 failed in 0.92s", /app/solver artifact "failed"). The run does not count as a fail.
+
+Read-only peeks: /app/solver copied out of the running container and run through a local build of the v2.1
+verifier image (tests/Dockerfile, the real test_outputs.py, 15 s per plan, plans one at a time, 2 CPUs, no network).
+  time    elapsed  hidden plans  what failed
+  17:36    80 min   6/12   case-00, 03 crash (pipe crossed a wall); kitchen/study spread on 02, 08, 10, 11
+  18:01   105 min   6/12   case-00, 03 crash; living spread on 02, 07, 08, 09
+  18:26   130 min   5/12   case-00, 03 crash; living spread on 02, 04, 06, 08; study over max on 05
+  18:51   155 min   7/12   case-05 crash; living spread on 03, 06, 08, 09 (plus kitchen/bed1/bed2 on 06, 08)
+  19:16   180 min   7/12   bed2+study over max on 05; kitchen/bed1 on 06; living/bed2 on 08; bed2 on 10; living on 11
+  19:41   205 min  10/12   bed2+study over max on 05; living spread and bed2 on 08
+  20:06   230 min   9/12   bed2 over max on 03; bed2+study on 05; living spread on 08
+  20:31   255 min  10/12   bed2 over max on 03 (423/417 W); bed2+study on 05
+  20:56   280 min  10/12   study 160/156 W on 05; hall 348/349 W on 11
+  21:21   305 min  11/12   case-05: study at its 156 W cap, hall 649/648 W
+  21:31   315 min  12/12   all pass in 101.9 s (about 8.5 s per plan); re-run of the saved copy: 12/12 in 102.0 s
+No peek ever failed a plan on the 15 s limit.
+
+At the stop GPT was still tuning, not wrapping up: its last messages describe a faster iterative heat solve that
+"agrees with the direct solver to about a billionth of a degree", sample plans finishing in four to six seconds,
+and a rerun of its full regression over plans it generated itself.
+
+Saved: trials/radiant-v2.1/gpt-run1/solver-at-12of12/ (the copy that scored 12/12 twice). The /app/solver at the
+stop differed only in refine.py (an edit made after the 12/12 peek).
+
+Consequence: the 15 s limit slowed GPT (v2: 12/12 at 3 h 12 min; v2.1: 12/12 at about 5 h 15 min) but did not
+stop it. v2.1 fails the "every trial fails" requirement. Codex Trials 2 and 3 were not started.
