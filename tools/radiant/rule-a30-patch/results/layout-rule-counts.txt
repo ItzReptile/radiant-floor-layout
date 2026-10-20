@@ -1,0 +1,12 @@
+violations per rule; 'hidden' = the 12 held-out plans, 'all' = those plus the 3 samples
+
+GPT-6.1 v2.1 solver (12/12 copy)
+  hidden: rule A 1205, rule A30 1204, rule B 1385; plans with no violation: A 0/12, A30 0/12, B 0/12
+  all 15: rule A 1340, rule A30 1339, rule B 1559
+  rule A30 violations on the hidden plans by kind: {'hall': 847, 'room step': 273, 'room U-turn, short side': 84}
+
+reference v2.1, unmodified
+  hidden: rule A 113, rule A30 26, rule B 767; plans with no violation: A 1/12, A30 3/12, B 0/12
+  all 15: rule A 138, rule A30 36, rule B 946
+  rule A30 violations on the hidden plans by kind: {'hall': 23, 'room U-turn, short side': 3}
+

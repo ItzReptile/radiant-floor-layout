@@ -1,0 +1,34 @@
+--- a/layout_solver.py
++++ b/layout_solver.py
+@@ -33,10 +33,10 @@
+ 
+ G = 0.05
+ CLEAR = 0.10  # clearance of zone pipes from interior walls, zone splits and keep-outs
+-P_CORE = [0.15, 0.20, 0.25, 0.30]
+-P_PERIM = [0.10, 0.15, 0.20]
++P_CORE = [0.20, 0.25, 0.30]
++P_PERIM = [0.20]
+ COMBOS = [(c, p) for c in P_CORE for p in P_PERIM if p <= c]
+-SWEEP = [(0.15, 0.10), (0.20, 0.15), (0.25, 0.15), (0.30, 0.20)]
++SWEEP = [(0.20, 0.20), (0.25, 0.20), (0.30, 0.20)]
+ RUN_GAP = 0.25  # row spacing of the hall-end serpentines
+ END_PIPE = 16.0  # pipe a hall-end serpentine may use
+ TREE = "snake"
+@@ -132,7 +132,7 @@
+             for wall, _, _ in self.walls:
+                 if abs(nxt - wall) < CLEAR - 1e-9:
+                     near = r4(wall - away * CLEAR)
+-                    nxt = near if (near - y) * away >= 0.10 - 1e-9 else r4(wall + away * CLEAR)
++                    nxt = near if (near - y) * away >= 0.20 - 1e-9 else r4(wall + away * CLEAR)
+             ys.append(nxt)
+             y = nxt
+         self.ys = ys
+@@ -631,7 +631,7 @@
+             m = len(order)
+             new = spread_lanes(order, y_low, y_high)
+             for k in order:
+-                if abs(new[k] - lane[k]) < 0.10 - 1e-9:   # not worth a jog
++                if abs(new[k] - lane[k]) < 0.20 - 1e-9:   # not worth a jog (rule: no hall piece under 0.20 m)
+                     new[k] = lane[k]
+             if any(abs(new[a] - new[b]) < 0.20 - 1e-9 for a, b in zip(order, order[1:])):
+                 continue

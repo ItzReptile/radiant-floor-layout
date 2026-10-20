@@ -1,0 +1,375 @@
+diff -ru -x __pycache__ v21-1019-205630/solver/optimize.py v21-1019-212137/solver/optimize.py
+--- v21-1019-205630/solver/optimize.py	2026-10-19 20:39:11.000000000 -0400
++++ v21-1019-212137/solver/optimize.py	2026-10-19 20:58:42.000000000 -0400
+@@ -262,6 +262,20 @@
+         if verbose:
+             print('HEAT',round(time.perf_counter()-t0,3),'lengths',self.length,file=__import__('sys').stderr)
+             for r in heat['rooms']:print(r,file=__import__('sys').stderr)
++        # Cooling one circuit of a shared room must not unbalance its two halves.
++        self.pair_balance={};self.pair_shifts={}
++        xx=(np.arange(self.nx)+self.x0)[None,:]/self.step;yy=(np.arange(self.ny)+self.y0)[:,None]/self.step
++        for ri in range(self.nroom):
++            members=[lp['slot'] for lp in loops if (lp['slot'],ri) in self.qperm]
++            if ri==self.d.hall or len(members)!=2:continue
++            stats=[]
++            for k in members:
++                region=np.zeros_like(self.roomof,dtype=bool)
++                for b in self.loop_bounds[k]:region|=(xx>=b[0]-1e-7)&(xx<=b[2]+1e-7)&(yy>=b[1]-1e-7)&(yy<=b[3]+1e-7)
++                sel=region&self.zone_masks[ri];full=region&self.room_masks[ri]
++                stats.append((k,float(self.temp[sel].mean()) if sel.any() else self.centers[ri],max(1,int(sel.sum())),max(1.,float(self.groom[full].sum()))))
++                self.pair_shifts[k,ri]=0.
++            self.pair_balance[ri]=stats
+         self.heat=heat
+         self.parsed_loops=loops
+         return heat
+@@ -327,6 +341,17 @@
+                 lo,hi=self.order_range[k]
+                 frac=np.clip((hi-order)/np.maximum(.001,hi-lo),0,1)
+                 cool=-1.25*self.uaout[k]*(float(dout.sum())*1.25)/self.mcp[k]*frac-self.flow_loss[k]*(dl*self.unit)
++            balance_updates=[]
++            if self.plaq_hall[j]:
++                for rj,stats in self.pair_balance.items():
++                    selected=next((v for v in stats if v[0]==k),None)
++                    if selected is None or abs(cool[rj])<1e-8:continue
++                    other=next(v for v in stats if v[0]!=k)
++                    _,ta,na,capacity=selected;kb,tb,nb,_=other
++                    shift=cool[rj]/capacity
++                    difference=ta+self.pair_shifts[k,rj]-tb-self.pair_shifts[kb,rj]
++                    delta+=3.*na*nb/(na+nb)*(2*difference*shift+shift*shift)/(min(3.,self.p['rooms'][rj]['max_spread'])**2)
++                    balance_updates.append((k,rj,shift))
+             total_dout=dout+cool
+             if self.hall_only or self.plaq_hall[j]:
+                 guarded=((total_dout<-.02)&(self.out+total_dout<self.lower_guard))|((total_dout>.02)&(self.out+total_dout>self.upper_guard))
+@@ -343,6 +368,7 @@
+             noise=anneal*(1-progress)
+             if delta>0 and (noise<=0 or rng.random()>math.exp(-delta/max(.00001,noise))):continue
+             temp[sl]+=dt;self.out+=total_dout;self.uniform_shift+=cool/self.croom
++            for kk,rr,shift in balance_updates:self.pair_shifts[kk,rr]+=shift
+             adj=self.adj[k]
+             for e,(a,b) in enumerate(es):
+                 if mask&(1<<e):adj[a].remove(b);adj[b].remove(a)
+diff -ru -x __pycache__ v21-1019-205630/solver/patterns.py v21-1019-212137/solver/patterns.py
+--- v21-1019-205630/solver/patterns.py	2026-10-19 20:33:17.000000000 -0400
++++ v21-1019-212137/solver/patterns.py	2026-10-19 20:58:42.000000000 -0400
+@@ -95,6 +95,7 @@
+         elif r.get('floor_r',0)<=.02:
+             trials.extend([(2,1,False),(2.25,1,False),(2.25,0,False),(2,(1,2),False),(2,(2,1),False),(2.5,1,False),(3,0,False),(2,2,False),(1.75,1,False),(2.5,2,False),(2.25,(1,2),False),(2.25,(2,1),False)])
+         elif r.get('floor_r',0)>=.08:
++            if res['output_w']<r['required_w']-.4*(r.get('max_w',1e99)-r['required_w']):trials.extend([(2,1,True),(2,1,False)])
+             trials.extend([(2.5,1,False),(2,1,False),(2,1,True),(2.25,0,5),(2.25,0,6),(2,(0,1),False),(2,(1,0),False),(2,0,5),(2,0,6),(1.75,1,False)])
+         else:
+             trials.extend([(2.5,1,False),(2,1,False),(2.25,0,False),(2.5,0,False),('z2.5',(0,0),False),('z2.5',(0,0),True),('z2',(0,0),False),('z2',(0,0),True),(2,2,False),(3,0,False),(2.25,1,False),(2.5,2,False)])
+diff -ru -x __pycache__ v21-1019-205630/solver/refine.py v21-1019-212137/solver/refine.py
+--- v21-1019-205630/solver/refine.py	2026-10-19 20:48:31.000000000 -0400
++++ v21-1019-212137/solver/refine.py	2026-10-19 21:09:26.000000000 -0400
+@@ -294,7 +294,8 @@
+     room_units=tuple(round(v/plan['grid']) for v in room['rect'])
+     own_loops=[lp for lp in loops if any(floor.room_at(*v)==ri for v in lp['walk'])]
+     borrow=(room['air_temp']>=19 and (heat['rooms'][ri]['output_w']>room.get('max_w',1e99) or (heat['rooms'][ri]['output_w']<room['required_w'] and len(own_loops)==1 and (len(own_loops[0]['walk'])-1)*plan['grid']>plan['pipe']['max_loop_length']-4)))
+-    pad=.65 if borrow else .2;halo=round(pad/plan['grid'])
++    pad=.65 if borrow else .4 if room['air_temp']<19 else .2;halo=round(pad/plan['grid'])
++    power_margin=.12 if borrow else .3
+     for lp in loops:
+         xy=np.array(lp['walk'])
+         own=(floor.room_of[xy[:,1]-floor.by0,xy[:,0]-floor.bx0]==ri).any()
+@@ -357,7 +358,11 @@
+         slow_moves=0
+         for sweep in range(2 if paired else 20):
+             if time.perf_counter()>=slot_deadline:break
+-            power_bad=base['output_w']<room['required_w'] or base['output_w']>room.get('max_w',1e99)
++            low_goal=room['required_w']+(power_margin if borrow else 0.)
++            high_goal=room.get('max_w',1e99)-(power_margin if borrow else 0.)
++            power_bad=base['output_w']<low_goal or base['output_w']>high_goal
++            power_error=max(0.,low_goal-base['output_w'],base['output_w']-high_goal)/max(10.,room.get('max_w',1e99)-room['required_w'])
++            brief=(power_bad and power_error<.10) or (paired and base['zone_spread']<room['max_spread']*1.12)
+             deltas=(-1,1,-2,2,-4,4,-6,6) if power_bad else (-1,1,-2,2)
+             best=None
+             pts=geometry.corners[slot]
+@@ -378,8 +383,13 @@
+                             pp=geometry.try_shift(slot,start,delta,end)
+                             if pp is not None:candidates.append((-1.,pp))
+                     start=None
+-            for j in range(1,len(pts)-2):
+-                if j%4==0 and time.perf_counter()>generation_stop:break
++            def proximity(j):
++                a,b=pts[j],pts[j+1];ax,bx=sorted((a[0],b[0]));ay,by=sorted((a[1],b[1]))
++                return min(max(0,ax-q[0],q[0]-bx)**2+max(0,ay-q[1],q[1]-by)**2 for q in (hottest,coldest))
++            indices=range(1,len(pts)-2)
++            if not power_bad:indices=sorted(indices,key=proximity)
++            for number,j in enumerate(indices):
++                if number%4==0 and time.perf_counter()>generation_stop:break
+                 for count in (1,3,5,7):
+                     end=j+count-1
+                     if end>=len(pts)-2:continue
+@@ -409,7 +419,7 @@
+             cum=np.r_[0,np.cumsum(lengths)];water=base['_water']
+             xy=np.asarray(geometry.paths[slot][1:],dtype=int);sel=floor.room_of[xy[:,1]-floor.by0,xy[:,0]-floor.bx0]==ri
+             twmean=float(water[sel].mean()) if sel.any() else float(water.mean())
+-            direction=1 if base['output_w']<room['required_w'] else -1 if base['output_w']>room.get('max_w',1e99) else 0
++            direction=1 if base['output_w']<low_goal else -1 if base['output_w']>high_goal else 0
+             room_after=np.cumsum(sel[::-1])[::-1]/max(1,int(sel.sum()))
+             mcp=plan['physics']['flow_constant']/(len(water)*plan['grid']+plan['physics']['flow_offset'])
+             ua=water_powers(plan,floor,geometry.paths[slot],water)[ri]*.8/max(2.,twmean-room['air_temp'])
+@@ -429,10 +439,11 @@
+                     return -(float(water[ix])-float(heat['bottom'][my-floor.by0,mx-floor.bx0]))
+                 x0,x1=sorted((a[0],b[0]));y0,y1=sorted((a[1],b[1]))
+                 return min(max(0,x0-q[0],q[0]-x1)**2+max(0,y0-q[1],q[1]-y1)**2 for q in (hottest,coldest))
+-            generation_stop=time.perf_counter()+max(.02,min(.10,(deadline-time.perf_counter())*.18))
++            generation_stop=time.perf_counter()+max(.015,min(.025 if brief and len(candidates)>12 else .10,(deadline-time.perf_counter())*.18))
+             for j in sorted(range(1,len(pts)-2),key=segment_rank):
+                 if time.perf_counter()>generation_stop:break
+                 for count in (2,3,4,5,6,8):
++                    if time.perf_counter()>generation_stop:break
+                     end=j+count-1
+                     if end>=len(pts)-2:continue
+                     chain=pts[j:end+2]
+@@ -447,7 +458,7 @@
+                             new_length=sum(abs(q[0]-v[0])+abs(q[1]-v[1]) for q,v in zip(piece,piece[1:]))
+                             change=new_length-int(cum[end+1]-cum[j]);point=((a[0]+b[0])//2,(a[1]+b[1])//2)
+                             candidates.append((0.,pp,hydraulic_bonus((cum[j]+cum[end+1])*.5,change,point)))
+-            generation_stop=time.perf_counter()+max(.02,min(.10,(deadline-time.perf_counter())*.20))
++            generation_stop=time.perf_counter()+max(.015,min(.03 if brief and len(candidates)>12 else .10,(deadline-time.perf_counter())*.20))
+             for j in sorted(range(1,len(pts)-2),key=segment_rank):
+                 a,b=pts[j],pts[j+1]
+                 if time.perf_counter()>generation_stop:break
+@@ -457,6 +468,7 @@
+                     dd=min((max(0,min(a[0],b[0])-q[0],q[0]-max(a[0],b[0])))**2+(max(0,min(a[1],b[1])-q[1],q[1]-max(a[1],b[1])))**2 for q in (hottest,coldest))
+                     if dd>144:continue
+                 for width in (2,4,6,8,12):
++                    if time.perf_counter()>generation_stop:break
+                     if length<width+4:continue
+                     anchors={2,length-width-2,(length-width)//2}
+                     if power_bad:anchors.update(range(2,length-width-1,6))
+@@ -464,6 +476,7 @@
+                         for q in (hottest,coldest):
+                             t=(q[0]-a[0])*dx+(q[1]-a[1])*dy;anchors.add(max(2,min(length-width-2,round(t-width*.5))))
+                     for t in sorted(anchors):
++                        if time.perf_counter()>generation_stop:break
+                         u=(a[0]+dx*t,a[1]+dy*t);v=(u[0]+dx*width,u[1]+dy*width)
+                         idx=min(len(water)-1,max(0,int(cum[j]+t+width*.5)-1));tw=float(water[idx])
+                         if idx<model.sleeve+2 or idx>len(water)-model.sleeve-2:continue
+@@ -600,7 +613,7 @@
+             slow_moves=slow_moves+1 if gain<.001 else 0
+             hottest,coldest=res['hot'],res['cold'];base=res
+             if slow_moves>=2:break
+-            if res['zone_spread']<room['max_spread']-.01 and room['required_w']+.3<res['output_w']<room.get('max_w',1e99)-.3 and res['max_surface']<room['max_surface']-.03:break
++            if res['zone_spread']<room['max_spread']-.01 and room['required_w']+power_margin<res['output_w']<room.get('max_w',1e99)-power_margin and res['max_surface']<room['max_surface']-.03:break
+         if accepted_res is not None:
+             res=accepted_res;cached_state=res
+             sl=np.s_[model.y0-floor.by0:model.y1-floor.by0+1,model.x0-floor.bx0:model.x1-floor.bx0+1]
+@@ -612,7 +625,7 @@
+                 if old['slot']==slot:
+                     fine=geometry.paths[slot];corners=thermal.simplify(fine)
+                     loops[j]={**old,'walk':fine,'points':corners,'segments':list(zip(corners,corners[1:])),'length_units':len(fine)-1}
+-            if res['zone_spread']<room['max_spread']-.01 and room['required_w']+.3<res['output_w']<room.get('max_w',1e99)-.3 and res['max_surface']<room['max_surface']-.03:break
++            if res['zone_spread']<room['max_spread']-.01 and room['required_w']+power_margin<res['output_w']<room.get('max_w',1e99)-power_margin and res['max_surface']<room['max_surface']-.03:break
+             idle_visits=0
+         else:
+             idle_visits+=1
+diff -ru -x __pycache__ v21-1019-205630/solver/regional.py v21-1019-212137/solver/regional.py
+--- v21-1019-205630/solver/regional.py	2026-10-19 20:54:24.000000000 -0400
++++ v21-1019-212137/solver/regional.py	2026-10-19 21:07:58.000000000 -0400
+@@ -12,7 +12,7 @@
+     slots=[lp['slot'] for lp in parsed if any(floor.room_at(*q)==ri for q in lp['walk'])]
+     if len(slots)!=2:return False
+     initial_paths={k:v.copy() for k,v in o.paths.items()}
+-    model=LocalModel(plan,floor,parsed,base_heat,ri,slots)
++    model=LocalModel(plan,floor,parsed,base_heat,ri,slots,pad=.35)
+     bounds=(model.x0,model.y0,model.x1,model.y1)
+     fine=original_paths(o.d,{k:o.paths[k] for k in slots})
+     res=model.evaluate(fine,ret_state=True)
+@@ -21,11 +21,7 @@
+     old_out=np.array([h['output_w'] for h in base_heat['rooms']])
+     old_power=sum((water_powers(plan,floor,fine[k],base_heat['water'][k],outside=bounds) for k in slots),np.zeros(len(plan['rooms'])))
+     region=np.s_[model.y0-floor.by0:model.y1-floor.by0+1,model.x0-floor.bx0:model.x1-floor.bx0+1]
+-    def objective(h):
+-        width=max(10.,room.get('max_w',1e99)-room['required_w'])
+-        error=(max(0.,room['required_w']+1-h['output_w'])+max(0.,h['output_w']-room.get('max_w',1e99)+1))/width
+-        peak=max(0.,h['max_surface']-room['max_surface'])/3
+-        return 100*error+1000*error*error+100*peak+(h['zone_spread']/room['max_spread'])**2+3*(h['soft_spread']/room['max_spread'])**2+3*(h['zone_std']/room['max_spread'])**2
++    def objective(h):return score(room,h)
+     current_objective=objective(res)
+     current_paths=initial_paths;current_heat=base_heat;current_parsed=parsed
+     best=(initial_paths,base_heat,parsed)
+@@ -37,7 +33,7 @@
+         if remaining<.13:break
+         o.active_rooms=[j==ri for j in range(len(plan['rooms']))]
+         o.freeze_children=set();o.hall_only=False
+-        stats=o.optimize(seconds=min(.14,max(.025,remaining-.11)),max_iterations=4000,max_accept=65,anneal=.02)
++        stats=o.optimize(seconds=min(.14,max(.025,remaining-.11)),max_iterations=4000,max_accept=35,anneal=.015)
+         if not stats['accepted']:break
+         paths={k:v.copy() for k,v in o.trace().items()}
+         fine=original_paths(o.d,{k:paths[k] for k in slots})
+diff -ru -x __pycache__ v21-1019-205630/solver/solve.py v21-1019-212137/solver/solve.py
+--- v21-1019-205630/solver/solve.py	2026-10-19 20:54:24.000000000 -0400
++++ v21-1019-212137/solver/solve.py	2026-10-19 21:20:07.000000000 -0400
+@@ -123,7 +123,7 @@
+     def evaluate_current():
+         nonlocal best,bestscore,bestkey,eval_time
+         t=time.perf_counter();heat=optimizer.evaluate()
+-        eval_time=max(.35,eval_time*.96,time.perf_counter()-t)
++        eval_time=max(.55,eval_time*.96,time.perf_counter()-t)
+         score,bad=status(p,heat)
+         power_bad=sum(h['output_w']<r['required_w']-2 or h['output_w']>r.get('max_w',1e99)+2 for r,h in zip(p['rooms'],heat['rooms']))
+         key=score
+@@ -132,6 +132,7 @@
+             best=(layout_of(d,optimizer.paths),heat,optimizer.parsed_loops,bad,{k:v.copy() for k,v in optimizer.paths.items()},copy.deepcopy(loops))
+         if debug:
+             print('heat',round(time.perf_counter()-START,3),'bad',[(p['rooms'][i]['id'],round(e,4)) for e,i in bad],file=sys.stderr)
++            print('linear',getattr(optimizer.floor,'last_schur_status',None),getattr(optimizer.floor,'direct_only',False),file=sys.stderr)
+         return bad
+ 
+     bad=evaluate_current()
+@@ -142,7 +143,7 @@
+         h=optimizer.heat
+         local_heat={**h,'rooms':[r.copy() for r in h['rooms']],'surface':h['surface'].copy(),'bottom':h['bottom'].copy(),'water':dict(h['water'])}
+         local_parsed=optimizer.parsed_loops.copy()
+-        optimize_patterns(d,loops,optimizer.floor,local_parsed,local_heat,time.perf_counter()+seconds,max_trials=7 if not only_failed else 6,debug=debug,only_failed=only_failed,exclude_pairs=bool(paired_seconds))
++        optimize_patterns(d,loops,optimizer.floor,local_parsed,local_heat,time.perf_counter()+seconds,max_trials=7 if not only_failed else 6,debug=debug,only_failed=only_failed,exclude_pairs=True)
+         if paired_seconds:
+             from pair import optimize_pairs
+             optimize_pairs(d,loops,optimizer.floor,local_parsed,local_heat,time.perf_counter()+paired_seconds,debug)
+@@ -160,7 +161,7 @@
+         return status(p,optimizer.heat)[1]
+ 
+     if bad and time.perf_counter()<START+5.6:
+-        bad=search_patterns(max(.1,min(3.0,START+5.0-time.perf_counter())),paired_seconds=1.25)
++        bad=search_patterns(max(.1,min(3.0,START+4.1-time.perf_counter())),paired_seconds=1.25)
+     if any(i==d.hall for _,i in bad) and time.perf_counter()<START+7.:
+         from hall import optimize_ends
+         sync_hall(loops,optimizer.paths)
+@@ -170,9 +171,15 @@
+             optimizer.reset_paths(loops)
+             bad=evaluate_current()
+     pair_rooms={ri for lp in loops for ri in lp['rooms'] if sum(ri in q['rooms'] for q in loops)>1}
++    def near_capacity_under(ri):
++        h=optimizer.heat['rooms'][ri];r=p['rooms'][ri]
++        members=[lp['slot'] for lp in loops if ri in lp['rooms']]
++        return (len(members)==1 and optimizer.length[members[0]]*d.unit>p['pipe']['max_loop_length']-4 and h['output_w']<r['required_w'] and h['zone_spread']<r['max_spread']*1.08 and h['max_surface']<r['max_surface'])
+     optimizer.hall_only=True
+     for iteration in range(5):
+         if not bad:break
++        if all((i in pair_rooms and e<.01) or (near_capacity_under(i) and e<.08) for e,i in bad):break
++        if len(bad)==1 and bad[0][1]==d.hall and bad[0][0]<.025 and optimizer.heat['rooms'][d.hall]['zone_spread']<=p['rooms'][d.hall]['max_spread'] and optimizer.heat['rooms'][d.hall]['max_surface']<=p['rooms'][d.hall]['max_surface']:break
+         if len(bad)<=2 and all(e<.002 and p['rooms'][i]['required_w']-3<=optimizer.heat['rooms'][i]['output_w']<=p['rooms'][i].get('max_w',1e99)+3 for e,i in bad):break
+         now=time.perf_counter();reserve=eval_time*1.35+.15
+         fine_reserve=(.65 if len(bad)==1 and bad[0][1] in pair_rooms else 1.1)+eval_time if len(bad)<=2 else .3
+@@ -205,25 +212,27 @@
+             if not bad:break
+             if not hall_failed and not power_failed and status(p,optimizer.heat)[0]>=previous_score-1e-5:break
+         now=time.perf_counter();available=deadline-now-eval_time*1.35-.2-fine_reserve
+-        need_refresh=any(i!=d.hall and (e>.18 or i not in pair_rooms and e>.05) for e,i in bad)
++        need_refresh=any(i!=d.hall and (e>.18 or i not in pair_rooms and e>.05 and not near_capacity_under(i)) for e,i in bad)
+         hall_power_bad=not p['rooms'][d.hall]['required_w']<=optimizer.heat['rooms'][d.hall]['output_w']<=p['rooms'][d.hall].get('max_w',1e99)
+         if hall_power_bad and max((e for e,i in bad if i!=d.hall),default=0.)<.25:need_refresh=False
+         if need_refresh and available>.3:
+-            worst=max(((e,i) for e,i in bad if i!=d.hall and (e>.18 or i not in pair_rooms and e>.05)),default=(0,None))[1]
++            worst=max(((e,i) for e,i in bad if i!=d.hall and (e>.18 or i not in pair_rooms and e>.05 and not near_capacity_under(i))),default=(0,None))[1]
+             bad=search_pairs(min(1.55,available)) if worst in pair_rooms else search_patterns(min(1.35,available),True)
+         elif not (hall_failed or power_failed or prepared_failed):break
++    pending=None
+     if bestscore>1e-8 and len(best)>=6:
+-        targets=[i for _,i in best[3] if i in pair_rooms]
++        targets=[i for e,i in best[3] if i in pair_rooms and e>.01]
+         available=deadline-time.perf_counter()-eval_time*1.35-.15
+         if targets and available>.3:
+             from regional import polish_pair
+             loops[:]=copy.deepcopy(best[5])
+             for lp in loops:lp['path']=best[4][lp['slot']].copy()
+             sync_hall(loops,best[4]);optimizer.reset_paths(loops);optimizer.install_heat(best[1],best[2])
+-            if polish_pair(optimizer,targets[0],time.perf_counter()+min(1.05,available),debug):bad=evaluate_current()
++            if polish_pair(optimizer,targets[0],time.perf_counter()+min(1.05,available),debug):
++                pending=(layout_of(d,optimizer.paths),optimizer.heat,optimizer.parsed_loops,status(p,optimizer.heat)[1])
+     if bestscore>1e-8:
+         from refine import refine_room
+-        layout,heat,parsed,bad=best[:4]
++        layout,heat,parsed,bad=pending if pending is not None else best[:4]
+         for epoch in range(2):
+             heat={**heat,'rooms':[r.copy() for r in heat['rooms']],'surface':heat['surface'].copy(),'bottom':heat['bottom'].copy(),'water':dict(heat['water'])}
+             parsed=parsed.copy()
+@@ -236,7 +245,7 @@
+                 if remaining<.15:break
+                 budget=remaining/max(1,len(bad)-j)
+                 paths,layout=refine_room(p,optimizer.floor,parsed,heat,paths,ri,time.perf_counter()+budget)
+-            if time.perf_counter()>=deadline-eval_time*1.05-.05:break
++            if time.perf_counter()>=deadline-eval_time*1.35-.05:break
+             parsed2,problems=thermal.check_geometry(p,layout,optimizer.floor)
+             if problems:break
+             t=time.perf_counter();heat2=thermal.solve_heat(p,parsed2,optimizer.floor)
+diff -ru -x __pycache__ v21-1019-205630/solver/thermal.py v21-1019-212137/solver/thermal.py
+--- v21-1019-205630/solver/thermal.py	2026-10-19 20:31:59.000000000 -0400
++++ v21-1019-212137/solver/thermal.py	2026-10-19 21:18:30.000000000 -0400
+@@ -5,7 +5,8 @@
+ 
+ import numpy as np
+ from scipy.sparse import coo_matrix
+-from scipy.sparse.linalg import spsolve
++from scipy.sparse.linalg import spsolve,LinearOperator,bicgstab
++from scipy.fft import dctn,idctn
+ 
+ EPS = 1e-6
+ 
+@@ -214,6 +215,41 @@
+ # ----------------------------------------------------------------- heat balance
+ 
+ 
++def _solve_schur(matrix,rhs,info,floor,plan,g_room):
++    """Eliminate directed water chains, then solve the screened floor equations."""
++    n=floor.nx*floor.ny;ph=plan['physics'];g=plan['grid']
++    F=matrix[:2*n,:2*n].tocsr();b=rhs[:2*n].copy();data=[];pipe_total=0.
++    for lp in info:
++        gk=lp['gk'];mcp=lp['mcp'];cells=lp['cells']
++        decay=np.cumprod(mcp/(mcp+gk))
++        if not len(decay) or decay[-1]<1e-100:return None
++        gain=gk/(mcp+gk)/decay;source=ph['supply_temp']*decay
++        np.add.at(b,cells,gk*source);data.append((cells,gk,decay,gain,source));pipe_total+=float(gk.sum())
++    def apply(v):
++        y=F@v
++        for cells,gk,decay,gain,_ in data:np.add.at(y,cells,-gk*decay*np.cumsum(gain*v[cells]))
++        return y
++    operator=LinearOperator((2*n,2*n),matvec=apply,dtype=np.float64)
++    if not hasattr(floor,'lap_eigenvalues'):
++        floor.lap_eigenvalues=(2-2*np.cos(np.pi*np.arange(floor.nx)/floor.nx))[None,:]+(2-2*np.cos(np.pi*np.arange(floor.ny)/floor.ny))[:,None]
++    lam=floor.lap_eigenvalues
++    gv=ph['k_screed']/ph['layer_gap']*g*g;gd=ph['insulation_u']*g*g
++    aa=ph['k_screed']*ph['pipe_layer']*lam+gv+gd+.5*pipe_total/n
++    bb=ph['k_screed']*ph['surface_layer']*lam+gv+float(np.mean(g_room));denom=aa*bb-gv*gv
++    def precondition(v):
++        z=dctn(v.reshape(2,floor.ny,floor.nx),axes=(1,2),norm='ortho');bot,top=z
++        result=np.empty_like(z);result[0]=(bb*bot+gv*top)/denom;result[1]=(gv*bot+aa*top)/denom
++        return idctn(result,axes=(1,2),norm='ortho').ravel()
++    precon=LinearOperator(operator.shape,matvec=precondition,dtype=np.float64)
++    x,flag=bicgstab(operator,b,x0=getattr(floor,'last_floor_solution',None),M=precon,rtol=1e-12,atol=1e-11,maxiter=90)
++    residual=float(np.max(np.abs(apply(x)-b))) if np.isfinite(x).all() else float('inf')
++    floor.last_schur_status=(int(flag),residual)
++    if residual>1e-9:return None
++    result=np.empty(matrix.shape[0]);result[:2*n]=x
++    for lp,(cells,gk,decay,gain,source) in zip(info,data):result[lp['nodes']]=source+decay*np.cumsum(gain*x[cells])
++    return result
++
++
+ def solve_heat(plan: dict, loops: list[dict], floor: Floor) -> dict:
+     g = plan["grid"]
+     ph = plan["physics"]
+@@ -284,7 +320,7 @@
+         rows.append(cells)
+         cols.append(nodes)
+         vals.append(-gk)
+-        info.append({"slot": loop["slot"], "nodes": nodes, "length_m": length, "mcp": mcp})
++        info.append({"slot": loop["slot"], "nodes": nodes, "length_m": length, "mcp": mcp,"cells":cells,"gk":gk})
+         offset += steps
+     rows.append(np.arange(2 * n))
+     cols.append(np.arange(2 * n))
+@@ -295,7 +331,11 @@
+         shape=(size, size),
+     ).tocsc()
+     b = np.concatenate([rhs] + water_rhs)
+-    t = spsolve(matrix, b, permc_spec="MMD_AT_PLUS_A")
++    t=None if getattr(floor,'direct_only',False) else _solve_schur(matrix,b,info,floor,plan,g_room)
++    if t is None:
++        floor.direct_only=True
++        t=spsolve(matrix,b,permc_spec="MMD_AT_PLUS_A")
++    floor.last_floor_solution=t[:2*n].copy()
+     surface = t[n:2 * n].reshape(ny, nx)
+ 
+     results = []
