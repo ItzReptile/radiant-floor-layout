@@ -1,0 +1,78 @@
+radiant-floor-layout: final checks on the submitted task directory (2026-10-20)
+Task directory: tasks/radiant-floor-layout = task commit 281d52a + README 'Relevant experience' filled in.
+Harbor digest as committed: sha256:b85d37b365602770d299763cfe37f8de035eefa665dc696b30b91c2a825bdcb5
+With the trial-time README (tools/radiant/verify_digest.py): sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985 = the digest in every v2 trial's lock.json
+
+== TB3 static checks (scripts/checks/check-*.sh in python:3.12-bookworm via tools/checks/run_checks_in.sh): 28/28 pass
+check-allow-internet.sh              PASS
+check-canary.sh                      PASS
+check-compose-volumes.sh             PASS
+check-cpu-threads.sh                 PASS
+check-dockerfile-platform.sh         PASS
+check-dockerfile-references.sh       PASS
+check-dockerfile-sanity.sh           PASS
+check-gpu-types.sh                   PASS
+check-image-digests.sh               PASS
+check-instruction-headings.sh        PASS
+check-instruction-suffix.sh          PASS
+check-no-allow-internet-true.sh      PASS
+check-no-cheat-dir.sh                PASS
+check-nproc.sh                       PASS
+check-pip-pinning.sh                 PASS
+check-pytest-version.sh              PASS
+check-resource-sizes.sh              PASS
+check-separate-verifier.sh           PASS
+check-task-absolute-path.sh          PASS
+check-task-changelog.sh              PASS
+check-task-fields.sh                 PASS
+check-task-package-name.sh           PASS
+check-task-slug.sh                   PASS
+check-task-timeout.sh                PASS
+check-test-file-references.sh        PASS
+check-test-sh-sanity.sh              PASS
+check-trial-network-fetch.sh         PASS
+check-verifier-tooling-baked.sh      PASS
+
+== Oracle (harbor run --agent oracle --env docker): reward 1, 13 passed in 92.26 s
+== Nop (harbor run --agent nop --env docker): reward 0, 13 failed in 0.78 s
+
+== TB3 implementation-rubric review (docs/prompts/task-implementation.toml, 35 criteria; claude-code + claude-sonnet-5, staged as CI does by tools/review/stage_local.py)
+33 pass, 0 fail, 2 not applicable (verdicts: rubric-verdicts.json)
+  pass            verifiable
+  pass            solvable
+  pass            difficult
+  pass            interesting
+  pass            outcome_verified
+  pass            anti_cheat_robustness
+  pass            task_security
+  pass            functional_verification
+  pass            deterministic_reproducible
+  pass            essential_difficulty
+  pass            test_instruction_alignment
+  pass            novel
+  pass            agentic
+  pass            reviewable
+  pass            instruction_concision
+  pass            solution_quality
+  pass            separate_verifier_configured
+  pass            environment_hygiene
+  pass            structured_data_schema
+  pass            typos
+  pass            difficulty_explanation_quality
+  pass            solution_explanation_quality
+  pass            verification_explanation_quality
+  pass            category_and_tags
+  pass            task_name
+  pass            resource_configuration
+  pass            task_readme
+  pass            expert_time_estimate
+  pass            task_toml_schema
+  pass            no_extraneous_files
+  not_applicable  artifact_efficiency
+  pass            verifier_execution_isolation
+  pass            ctrf_reporting
+  not_applicable  do_not_modify_enforced
+  pass            binary_reward
+
+An earlier run of this review on the same files scored 32 pass / 1 fail: it found a local, untracked
+tests/__pycache__/ (never committed) left by host-side analysis; the folder was deleted and the review re-run.

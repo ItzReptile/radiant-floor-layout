@@ -5,7 +5,10 @@ pipe in the unmeasured comfort-zone border, and each room's net heat imported th
 (output + downward loss - heat its own pipe cells inject), from the checker's own solution vector."""
 import json, sys
 from pathlib import Path
+
 import numpy as np
+
+sys.dont_write_bytecode = True  # keep the task's tests/ free of __pycache__
 
 HERE = Path(__file__).resolve().parent
 TASK = HERE.parents[2] / "tasks" / "radiant-floor-layout"

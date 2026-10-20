@@ -1,0 +1,144 @@
+{
+ "checks": {
+  "verifiable": {
+   "outcome": "pass",
+   "explanation": "The verifier is a deterministic physics solve (sparse linear system) with no LLM-as-a-judge, and tests/Dockerfile bakes numpy/scipy/pytest so test.sh performs no runtime network installs."
+  },
+  "solvable": {
+   "outcome": "pass",
+   "explanation": "The reference solver (866 lines) was run against all 3 sample plans and all 12 held-out plans in this review and passed the checker on every one, confirming a working solution exists; the approach (rotation into canonical frame, loop assignment, lane routing, spanning-tree coverage, pitch tuning) is implementable by an expert HVAC/algorithms engineer in a matter of hours."
+  },
+  "difficult": {
+   "outcome": "pass",
+   "explanation": "The task requires coupling floor-heat-transfer physics, hydraulic flow modeling, and combinatorial pipe-routing/port-assignment under tight coupled constraints (series-heated rooms, perimeter heat loss banding, counterflow balance, non-crossing leaders) that would challenge an experienced engineer, not something an average undergraduate solves in a few days."
+  },
+  "interesting": {
+   "outcome": "pass",
+   "explanation": "Designing hydronic radiant floor pipe layouts that meet heat output, surface temperature, and evenness requirements is real work performed by HVAC/mechanical designers, and automating/optimizing it has clear commercial value."
+  },
+  "outcome_verified": {
+   "outcome": "pass",
+   "explanation": "Instructions only state the end goal (write a solver whose output layout passes the checker) and tests only grade the final layout's physics/geometry outcome, never the approach or tools used."
+  },
+  "anti_cheat_robustness": {
+   "outcome": "pass",
+   "explanation": "Held-out plans and the checker's verifier copy live only in tests/ (never shipped to the agent image), the solver runs in the verifier as the unprivileged 'porter' user who cannot read /tests, and runner_guard.py kills any leftover porter processes before/after each test and before the reward is written."
+  },
+  "task_security": {
+   "outcome": "pass",
+   "explanation": "All Dockerfiles, scripts, and test harness code perform only legitimate setup/verification actions (pip installs of pinned deps, copying checker/plans, running the solver, process cleanup); no exfiltration, obfuscation, or prompt injection was found."
+  },
+  "functional_verification": {
+   "outcome": "pass",
+   "explanation": "Verification executes the agent's solver as a subprocess and evaluates its output through an exact physics/geometry solve (check_layout.py), with no string/keyword matching against source code."
+  },
+  "deterministic_reproducible": {
+   "outcome": "pass",
+   "explanation": "numpy, scipy, pytest, and pytest-json-ctrf are version-pinned identically across environment/Dockerfile and tests/Dockerfile, there are no live-service dependencies, and the checker's linear solve is deterministic."
+  },
+  "essential_difficulty": {
+   "outcome": "pass",
+   "explanation": "Difficulty comes from genuine coupled physical/algorithmic reasoning (routing, heat balance, flow dynamics); the output format (a simple loops/path JSON) is simple and not a source of clerical failure."
+  },
+  "test_instruction_alignment": {
+   "outcome": "pass",
+   "explanation": "The test suite only checks what the instruction describes (solve.py exists, produces a layout within 40s per plan that passes the checker on floor plans 'of the same kind'), and does not introduce unstated requirements."
+  },
+  "novel": {
+   "outcome": "pass",
+   "explanation": "This is a bespoke underfloor-heating layout/physics simulation problem with a custom checker and plan format; it is not a known textbook or widely available algorithmic exercise."
+  },
+  "agentic": {
+   "outcome": "pass",
+   "explanation": "Solving requires iterative exploration of the custom checker and sample plans, writing and testing a non-trivial solver against the checker, and tuning parameters — this cannot be done in a single zero-shot generation."
+  },
+  "reviewable": {
+   "outcome": "pass",
+   "explanation": "The checker's physics/geometry logic is fully included and documented in its docstring, and the README explains in detail how plan limits were calibrated (margins around the reference solver's results, filtered against baseline ablations) even though the external plan generator itself isn't bundled in the task directory."
+  },
+  "instruction_concision": {
+   "outcome": "pass",
+   "explanation": "instruction.md is short, uses absolute paths throughout, states the goal and constraints without hinting at a solution approach, and has no headings, fluff, or roleplay."
+  },
+  "solution_quality": {
+   "outcome": "pass",
+   "explanation": "The solution performs genuine computation (rotation/canonicalization, loop assignment, routing, spanning-tree coverage, checker-guided pitch tuning) rather than hardcoding an answer, and the large solver file is kept as its own file in solution/solver/ rather than inlined in solve.sh."
+  },
+  "separate_verifier_configured": {
+   "outcome": "pass",
+   "explanation": "All verifier inputs are either baked into tests/Dockerfile (checker, held-out plans, runner_guard) or delivered via the declared /app/solver/ artifact; verifier-only tooling (numpy, scipy, pytest, pytest-json-ctrf) is pre-installed in tests/Dockerfile with no runtime installs in test.sh; and the shared check_layout.py is byte-identical across the two images (confirmed via diff) with pinned numpy/scipy versions matching."
+  },
+  "environment_hygiene": {
+   "outcome": "pass",
+   "explanation": "environment/Dockerfile only copies the app/ (checker + sample plans) directory and never tests/ or solution/; test-only dependencies (pytest, pytest-json-ctrf) live only in tests/Dockerfile; neither Dockerfile uses apt so apt rules don't apply."
+  },
+  "structured_data_schema": {
+   "outcome": "pass",
+   "explanation": "The plan and layout JSON schemas are explicitly and normatively documented in check_layout.py's module docstring, which instruction.md directly points the agent to."
+  },
+  "typos": {
+   "outcome": "pass",
+   "explanation": "No typos were found in filenames, paths, commands, or identifiers across instruction.md, README.md, task.toml, tests, solution, or Dockerfiles."
+  },
+  "difficulty_explanation_quality": {
+   "outcome": "pass",
+   "explanation": "The README's Difficulty explanation names the real-world role (underfloor-heating designer) and lays out specific, concrete sources of coupled difficulty (series-heated rooms, perimeter heat-loss banding, counterflow balance, non-crossing leader routing, hall-only heating via leaders, keep-outs, tight heat/evenness windows) understandable to a non-specialist, backed by baseline-ablation evidence rather than agent pass-rate claims."
+  },
+  "solution_explanation_quality": {
+   "outcome": "pass",
+   "explanation": "The Solution explanation concisely describes the canonicalization, loop assignment, planar port ordering, lane-based leader routing, counterflow spanning-tree zone coverage, and checker-guided pitch tuning, and is consistent with the actual solver code and docstring."
+  },
+  "verification_explanation_quality": {
+   "outcome": "pass",
+   "explanation": "The Verification explanation describes the 12 held-out plans, the unprivileged execution model, and justifies the tolerance bounds (heat windows, evenness margins) as calibrated around the reference solver's results and filtered so that weaker baseline algorithms fail, which is consistent with the actual test files."
+  },
+  "category_and_tags": {
+   "outcome": "pass",
+   "explanation": "Category 'Software' / subcategory 'Algorithms' fits the core algorithmic routing/optimization challenge, and tags (hvac, underfloor-heating, layout, routing, heat-transfer, optimization) are specific and relevant rather than generic."
+  },
+  "task_name": {
+   "outcome": "pass",
+   "explanation": "'radiant-floor-layout' is a concise, descriptive, lowercase kebab-case, 3-word slug that accurately conveys the task's subject."
+  },
+  "resource_configuration": {
+   "outcome": "pass",
+   "explanation": "Verifier timeout (1200s) comfortably covers 12 plans at up to 40s each plus overhead, agent timeout (6h) matches the stated expert estimate and task complexity, and bumped cpus/memory (2 cpu, 4GB) are modest and justified by the sparse-solve/geometry computations rather than being used to inflate difficulty artificially."
+  },
+  "task_readme": {
+   "outcome": "pass",
+   "explanation": "README.md includes all required sections (Difficulty explanation, Solution explanation, Verification explanation, Relevant experience) plus a task metadata summary, without redundant duplication of the instruction or solution code."
+  },
+  "expert_time_estimate": {
+   "outcome": "pass",
+   "explanation": "expert_time_estimate_hours = 6.0 is non-default and plausible given the task's described complexity and the 6-hour agent timeout."
+  },
+  "task_toml_schema": {
+   "outcome": "pass",
+   "explanation": "task.toml uses only recognized fields in [metadata], [verifier], [agent], [environment], and at root level (schema_version, task, metadata, verifier, agent, environment, artifacts); no invented fields are present."
+  },
+  "no_extraneous_files": {
+   "outcome": "pass",
+   "explanation": "Every file in the task directory is referenced by a Dockerfile, the solve script, or the tests (checker copies, sample/held-out plans, solver, runner_guard, test files); nothing unused was found."
+  },
+  "artifact_efficiency": {
+   "outcome": "not_applicable",
+   "explanation": "The only artifact, /app/solver/, is the agent's small hand-written deliverable itself (the solution being graded), not a large build-time-fixed tree or dependency directory that could instead be baked into the verifier image."
+  },
+  "verifier_execution_isolation": {
+   "outcome": "pass",
+   "explanation": "The agent's solver is executed via subprocess as the unprivileged 'porter' user (never imported in-process), the reward directory is root-owned before any agent code runs, root's test.sh derives the reward solely from pytest's exit status, and runner_guard.py kills all porter-owned processes before/after each run and again before the reward is written."
+  },
+  "ctrf_reporting": {
+   "outcome": "pass",
+   "explanation": "test.sh runs pytest with --ctrf /logs/verifier/ctrf.json, emitting per-test CTRF results for the discrete per-plan checks."
+  },
+  "do_not_modify_enforced": {
+   "outcome": "not_applicable",
+   "explanation": "instruction.md contains no 'do not modify/preserve' constraint on a concrete artifact; it only states where the solver must live and what it may use."
+  },
+  "binary_reward": {
+   "outcome": "pass",
+   "explanation": "test.sh writes exactly 1 or 0 to reward.txt based on pytest's exit status combined with the runner_guard check, with no fractional or weighted scoring path."
+  }
+ }
+}

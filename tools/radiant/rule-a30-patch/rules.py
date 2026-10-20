@@ -10,6 +10,8 @@ Rule none: the task's checker unchanged.
 import sys
 from pathlib import Path
 
+sys.dont_write_bytecode = True  # keep the task's tests/ free of __pycache__
+
 ROOT = Path(__file__).resolve().parents[3]
 TASK = ROOT / "tasks" / "radiant-floor-layout"
 if "check_layout" not in sys.modules:

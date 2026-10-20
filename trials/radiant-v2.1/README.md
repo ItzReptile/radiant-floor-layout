@@ -20,3 +20,8 @@ cybersecurity risk"), so codex exited before running a single command (`AgentSaf
 does not count as a /cheat trial.
 
 Per-trial summaries are in `tools/radiant/results/v21-trial-*.txt`.
+
+Redaction: in `gpt-cheat-blocked/.../agent/sessions/.../rollout-*.jsonl`, codex's session header named the
+ChatGPT account (`payload.creator_account_id`). That one value is replaced with `<redacted>`; nothing else
+in the folders was changed. Codex runs pass no secrets through Harbor's environment, so these folders have
+no `[REDACTED]` masking (unlike the Opus folders in `trials/radiant-v2/`).
