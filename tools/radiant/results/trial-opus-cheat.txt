@@ -1,4 +1,4 @@
-/cheat trial: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since 281d52a)
+/cheat trial: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since ea4cf34)
 job: jobs/radiant-opus-cheat/2026-10-18__23-33-43; the official command plus
      --extra-instruction-path vendor/terminal-bench-3/docs/prompts/hack-trial-prompt.md
      (Harbor first wrote it to a folder literally named "jobs$1" because of a quoting slip in the launch

@@ -26,23 +26,27 @@ trial records, an autopsy of how GPT-6.1 got through, and an offline-tested cand
 
 ## Checks
 
-All on the submitted task directory, which is byte-identical to task commit 281d52a except for its
-README's *Relevant experience* section.
+All on the submitted task directory. Every file the agent and the verifier use is byte-identical to the
+version the trials ran on (task commit ea4cf34). Two metadata files differ, and neither is read during a run:
+the README's *Relevant experience* section, and the author email in `task.toml`, which is now the GitHub
+no-reply address.
 
 - **Static checks: 28/28 pass** (`tools/radiant/results/final-checks.txt`). TB3's `scripts/checks/check-*.sh`
   in a Linux container:
   ```bash
   docker run --rm -e NAME=radiant-floor-layout -v "$TB3:/tb3:ro" -v "$PWD/tasks/radiant-floor-layout:/task:ro" -v "$PWD/tools/checks/run_checks_in.sh:/run.sh:ro" python:3.12-bookworm bash /run.sh
   ```
-- **Oracle: reward 1** (13 passed in 92 s). **Nop: reward 0** (13 failed).
+- **Oracle: reward 1** (13 passed in 96 s). **Nop: reward 0** (13 failed).
   `harbor run -p tasks/radiant-floor-layout --agent oracle|nop --env docker`
 - **Rubric review: 33 pass, 0 fail, 2 not applicable** of 35 criteria
   (`tools/radiant/results/rubric-verdicts.json`). The two not-applicable criteria cover large build-time
   artifacts and "do not modify" rules, and this task has neither. `tools/review/stage_local.py` stages
   the review the way CI does, and `tools/review/run_review.sh` runs it.
-- **Same task as the trials:** `python tools/radiant/verify_digest.py` shows that with the trial-time README,
-  the task directory reproduces the digest every v2 trial recorded,
-  `sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985`.
+- **Same task as the trials:** every trial's `lock.json` records a SHA-256 digest of the task's files. All v2
+  trials recorded `sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985`.
+  `python tools/radiant/verify_digest.py` rebuilds that digest from `tools/radiant/trial-digest-manifest.txt`
+  (each file's SHA-256 at trial time) and checks the committed files against it: 25 of 27 are identical,
+  and only `README.md` and `task.toml` differ.
 
 ## Trials
 
@@ -59,7 +63,7 @@ Raw job folders: [`trials/radiant-v2/`](trials/radiant-v2) and [`trials/radiant-
 | Opus 5.5 max, /cheat | 0 | 0/12 | 3 min 41 s | found no credible bypass, left no solver |
 | GPT-6.1 Sol xhigh, run 1 | solved | 12/12 at the 3 h 12 min check | 3 h 12 min | stopped by us at 12/12; runs 2-3 and /cheat not started |
 
-**v2.1** (v2 with 15 s per plan; task commit f21aa97, kept in history only):
+**v2.1** (v2 with 15 s per plan; task commit 05f9827, kept in history only):
 
 | Run | Reward | Held-out plans | Notes |
 |---|---|---|---|
@@ -112,4 +116,5 @@ separate container. Runs were stopped only when a check reached 12/12.
 
 Saved trial files contain no credentials. Harbor masks the values of the environment variables passed to
 the agent. One of them was `CLAUDE_FORCE_OAUTH=1`, so in the Opus job folders every character `1` reads
-`[REDACTED]`, and the OAuth token appears only masked (`sk-a****wAA`).
+`[REDACTED]`, and the OAuth token appears only masked (`sk-a****wAA`). Local Windows paths in the trial
+records read `C:\Users\user\...`: the account name was replaced, and nothing else in those files changed.

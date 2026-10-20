@@ -1,7 +1,7 @@
 # radiant-floor-layout v2.1: trial job folders
 
-Raw Harbor 0.24.0 job folders, copied unchanged from the local `jobs/` directory. Every trial ran
-on the v2.1 task files (branch `radiant-v2.1`, task commit f21aa97: v2 with a 15 s per-plan limit).
+Raw Harbor 0.24.0 job folders from the local `jobs/` directory, unchanged except for the redactions below. Every trial ran
+on the v2.1 task files (task commit 05f9827 in this repository's history: v2 with a 15 s per-plan limit).
 Runs go one at a time, so no two trials share the CPU.
 
 | Folder | Agent | Model | Reward | Held-out plans passed | Agent time |
@@ -25,3 +25,5 @@ Redaction: in `gpt-cheat-blocked/.../agent/sessions/.../rollout-*.jsonl`, codex'
 ChatGPT account (`payload.creator_account_id`). That one value is replaced with `<redacted>`; nothing else
 in the folders was changed. Codex runs pass no secrets through Harbor's environment, so these folders have
 no `[REDACTED]` masking (unlike the Opus folders in `trials/radiant-v2/`).
+
+Local Windows paths in these folders read `C:\Users\user\...`: the account name was replaced.

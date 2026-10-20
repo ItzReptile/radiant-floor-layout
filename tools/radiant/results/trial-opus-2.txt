@@ -1,4 +1,4 @@
-Official Trial 2 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since 281d52a)
+Official Trial 2 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (task unchanged since ea4cf34)
 job: jobs/radiant-opus-run2/2026-10-18__15-41-10 (local Harbor 0.24.0, docker); same command as Trial 1
 agent ran 15:44-17:33 local (1 h 48 min of the 6 h limit) and stopped on its own; exception_info null, no timeout, no auth or rate-limit errors
 reward: 0. Verifier: 8 tests passed (entry point + 7 plans), 5 failed:

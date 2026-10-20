@@ -1,4 +1,4 @@
-radiant-floor-layout v2.1 (f21aa97): codex GPT-6.1 Sol (xhigh) /cheat trial, jobs/radiant-v2.1-gpt-cheat
+radiant-floor-layout v2.1 (05f9827): codex GPT-6.1 Sol (xhigh) /cheat trial, jobs/radiant-v2.1-gpt-cheat
 Command: harbor run -p tasks/radiant-floor-layout --agent codex --model openai/gpt-6.1-sol --ak reasoning_effort=xhigh
          --extra-instruction-path vendor/terminal-bench-3/docs/prompts/hack-trial-prompt.md --env docker
          (host env CODEX_FORCE_AUTH_JSON=1: the ChatGPT login)

@@ -1,6 +1,6 @@
 # radiant-floor-layout v2.1 gate (offline, no agent trials)
 
-v2.1 = v2 (281d52a) with a 15 s per-plan limit instead of 40 s. Same 3 sample and 12 held-out plans, same checker
+v2.1 = v2 (ea4cf34) with a 15 s per-plan limit instead of 40 s. Same 3 sample and 12 held-out plans, same checker
 and physics. Changes: `tests/test_outputs.py` (TIMEOUT_S 15), `instruction.md` (15 seconds), `task.toml`
 (version 1.1.0, verifier timeout 600 s), README, and the reference solver's time handling: at least 6 checker
 evaluations before its 5 s search budget applies, a faster sparse ordering (MMD_AT_PLUS_A, same answers within 1e-12)

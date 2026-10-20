@@ -1,4 +1,4 @@
-radiant-floor-layout v2.1 (f21aa97): Official Codex Trial 1, GPT-6.1 Sol (xhigh), jobs/radiant-v2.1-gpt-run1
+radiant-floor-layout v2.1 (05f9827): Official Codex Trial 1, GPT-6.1 Sol (xhigh), jobs/radiant-v2.1-gpt-run1
 Command: harbor run -p tasks/radiant-floor-layout --agent codex --model openai/gpt-6.1-sol --ak reasoning_effort=xhigh --env docker
          (host env CODEX_FORCE_AUTH_JSON=1: the ChatGPT login). Ran alone on the machine; Docker checked before start.
 Started 2026-10-19 16:16:26 EDT.

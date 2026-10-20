@@ -4,7 +4,7 @@ Local Harbor 0.24.0 with Docker on one Windows PC. Reward 1 only if the agent's 
 held-out plans. Raw job folders: `trials/radiant-v2/` and `trials/radiant-v2.1/`. Per-run details:
 the `trial-*.txt` and `v21-trial-*.txt` files in this folder.
 
-## v2: the submitted task (task commit 281d52a, 40 s per plan)
+## v2: the submitted task (task commit ea4cf34, 40 s per plan)
 
 Task digest in every run's `lock.json`: `sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985`.
 
@@ -19,7 +19,7 @@ Task digest in every run's `lock.json`: `sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5
 None of the finished Opus runs had an exception, a timeout, or an auth or rate-limit error. Once Codex
 /run 1 solved the held-out set, Codex runs 2 and 3 and the Codex /cheat run were not started on v2.
 
-## v2.1: v2 with a 15 s limit per plan (task commit f21aa97, branch history only)
+## v2.1: v2 with a 15 s limit per plan (task commit 05f9827, branch history only)
 
 | Run | Agent / model | Reward | Held-out plans passed | Agent time | How it ended |
 |---|---|---|---|---|---|

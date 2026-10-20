@@ -1,4 +1,4 @@
-Official Codex Trial 1: codex, openai/gpt-6.1-sol, reasoning_effort=xhigh, radiant-floor-layout v2 (task unchanged since 281d52a)
+Official Codex Trial 1: codex, openai/gpt-6.1-sol, reasoning_effort=xhigh, radiant-floor-layout v2 (task unchanged since ea4cf34)
 job: jobs/radiant-gpt-run1/2026-10-18__23-40-58 (local Harbor 0.24.0, docker)
 command: CODEX_FORCE_AUTH_JSON=1 harbor run -p tasks/radiant-floor-layout --agent codex --model openai/gpt-6.1-sol
          --ak reasoning_effort=xhigh --env docker   (ChatGPT login from ~/.codex/auth.json; smoke-tested first)

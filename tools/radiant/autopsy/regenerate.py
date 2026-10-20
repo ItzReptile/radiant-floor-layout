@@ -2,7 +2,7 @@
 scored 12/12 at 21:31) and the v2.1 reference, one plan at a time with a 15 s limit and numeric threads
 capped at 2. Usage: python regenerate.py [gpt] [ref]   (writes layouts/<name>/<plan>.json)
 
-The v2.1 reference is taken from git (f21aa97), since the task directory holds v2."""
+The v2.1 reference is taken from git (05f9827), since the task directory holds v2."""
 import os, subprocess, sys, tempfile, time  # noqa: E401
 from pathlib import Path
 
@@ -16,7 +16,7 @@ def reference_v21():
     d = Path(tempfile.mkdtemp(prefix="ref-v21-"))
     for src, dst in (("tasks/radiant-floor-layout/solution/solver/layout_solver.py", "layout_solver.py"),
                      ("tasks/radiant-floor-layout/environment/app/check_layout.py", "check_layout.py")):
-        (d / dst).write_bytes(subprocess.run(["git", "-C", str(ROOT), "show", f"f21aa97:{src}"],
+        (d / dst).write_bytes(subprocess.run(["git", "-C", str(ROOT), "show", f"05f9827:{src}"],
                                              capture_output=True, check=True).stdout)
     (d / "solve.py").write_text("import sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).resolve().parent))\n"
                                 "from layout_solver import main\nmain()\n")

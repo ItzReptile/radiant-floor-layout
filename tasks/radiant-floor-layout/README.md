@@ -4,7 +4,7 @@
 
 ## Task Metadata
 
-- **Author:** Jose Hernandez (GitHub: ItzReptile)
+- **Author:** Jose Hernandez (130425994+ItzReptile@users.noreply.github.com)
 - **Category:** `Software`
 - **Tags:** <code>hvac</code> <code>underfloor-heating</code> <code>layout</code> <code>routing</code> <code>heat-transfer</code> <code>optimization</code>
 - **Expert time:** 6 hours

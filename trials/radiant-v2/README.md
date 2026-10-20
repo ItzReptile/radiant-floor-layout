@@ -1,7 +1,8 @@
 # radiant-floor-layout v2: trial job folders
 
-Raw Harbor 0.24.0 job folders, copied unchanged from the local `jobs/` directory. Every trial ran
-on the same task files (last task commit 281d52a).
+Raw Harbor 0.24.0 job folders from the local `jobs/` directory. Every trial ran on the same task files
+(task commit ea4cf34). The only edit: local Windows paths read `C:\Users\user\...`, with the account
+name replaced.
 
 | Folder | Agent | Model | Reward | Held-out plans passed | Agent time |
 |---|---|---|---|---|---|

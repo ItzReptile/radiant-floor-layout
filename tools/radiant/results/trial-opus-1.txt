@@ -1,4 +1,4 @@
-Official Trial 1 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (commit 281d52a)
+Official Trial 1 of 3: claude-code, anthropic/claude-opus-5-5, reasoning_effort=max, radiant-floor-layout v2 (commit ea4cf34)
 job: jobs/radiant-opus-run1/2026-10-18__10-52-35 (local Harbor 0.24.0, docker)
 command: harbor run -p tasks/radiant-floor-layout --agent claude-code --model anthropic/claude-opus-5-5
          --ak reasoning_effort=max --ae CLAUDE_FORCE_OAUTH=1 --ae CLAUDE_CODE_OAUTH_TOKEN=... --ae CLAUDE_CODE_MAX_OUTPUT_TOKENS=128000 --env docker

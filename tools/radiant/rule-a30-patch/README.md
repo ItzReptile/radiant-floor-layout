@@ -56,7 +56,7 @@ held-out plans (`results/layout-rule-counts.txt`):
   use 0.25 m rows), so the rule makes the hall heat dump coarser rather than impossible.
 - **Only the GPT solver was scored.** The saved Opus solvers have not been scored against the rule.
 - **Not adopted.** The task's checker and `instruction.md` do not contain the rule.
-- **Built on v2.1.** The patches are against the v2.1 reference (commit f21aa97, the 15 s version), not the
+- **Built on v2.1.** The patches are against the v2.1 reference (commit 05f9827, the 15 s version), not the
   v2 reference in the task directory.
 
 ## Files and commands

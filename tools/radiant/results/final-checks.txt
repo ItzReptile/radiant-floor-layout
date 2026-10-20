@@ -1,7 +1,9 @@
 radiant-floor-layout: final checks on the submitted task directory (2026-10-20)
-Task directory: tasks/radiant-floor-layout = task commit 281d52a + README 'Relevant experience' filled in.
-Harbor digest as committed: sha256:b85d37b365602770d299763cfe37f8de035eefa665dc696b30b91c2a825bdcb5
-With the trial-time README (tools/radiant/verify_digest.py): sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985 = the digest in every v2 trial's lock.json
+Every file the agent and verifier use is byte-identical to the v2 trials' files (task commit ea4cf34);
+only README.md (Relevant experience filled in) and task.toml (author email = GitHub no-reply address) differ.
+Harbor digest as committed: sha256:604768b26f531485c20af5b4e70c894b47540ae255184942f290f80d0a03f994
+Trial-time digest, rebuilt from trial-digest-manifest.txt by tools/radiant/verify_digest.py:
+sha256:ca1fbd31dfaf6a8cb44d4022de9e30d5fd31ebd8c1f19788791b7fe89f511985 = the digest in every v2 trial's lock.json
 
 == TB3 static checks (scripts/checks/check-*.sh in python:3.12-bookworm via tools/checks/run_checks_in.sh): 28/28 pass
 check-allow-internet.sh              PASS
@@ -33,11 +35,11 @@ check-test-sh-sanity.sh              PASS
 check-trial-network-fetch.sh         PASS
 check-verifier-tooling-baked.sh      PASS
 
-== Oracle (harbor run --agent oracle --env docker): reward 1, 13 passed in 92.26 s
-== Nop (harbor run --agent nop --env docker): reward 0, 13 failed in 0.78 s
+== Oracle (harbor run --agent oracle --env docker): reward 1, 13 passed in 95.68 s
+== Nop (harbor run --agent nop --env docker): reward 0, 13 failed in 0.87 s
 
-== TB3 implementation-rubric review (docs/prompts/task-implementation.toml, 35 criteria; claude-code + claude-sonnet-5, staged as CI does by tools/review/stage_local.py)
-33 pass, 0 fail, 2 not applicable (verdicts: rubric-verdicts.json)
+== TB3 implementation-rubric review (docs/prompts/task-implementation.toml, 35 criteria; claude-code + claude-sonnet-5,
+   staged as CI does by tools/review/stage_local.py): 33 pass, 0 fail, 2 not applicable (rubric-verdicts.json)
   pass            verifiable
   pass            solvable
   pass            difficult
@@ -74,5 +76,7 @@ check-verifier-tooling-baked.sh      PASS
   not_applicable  do_not_modify_enforced
   pass            binary_reward
 
-An earlier run of this review on the same files scored 32 pass / 1 fail: it found a local, untracked
-tests/__pycache__/ (never committed) left by host-side analysis; the folder was deleted and the review re-run.
+The rubric review ran before the author email in README.md and task.toml was replaced by the GitHub no-reply
+address; nothing else in the task has changed since. An earlier run of the review on the same files scored
+32 pass / 1 fail: it found a local, untracked tests/__pycache__/ (never committed) left by host-side analysis;
+the folder was deleted and the review re-run.
