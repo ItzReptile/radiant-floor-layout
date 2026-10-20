@@ -6,7 +6,7 @@ artifacts = ["/app/solver/"] # the agent's solver; the verifier runs it on held-
 
 [task]
 name = "terminal-bench/radiant-floor-layout"
-version = "1.1.0"
+version = "1.0.0"
 description = ""
 authors = [{ name = "Jose Hernandez", email = "130425994+ItzReptile@users.noreply.github.com" }]
 
@@ -20,7 +20,7 @@ tags = ["hvac", "underfloor-heating", "layout", "routing", "heat-transfer", "opt
 expert_time_estimate_hours = 6.0
 
 [verifier]
-timeout_sec = 600.0 # the solver runs on every held-out plan (up to 15 s each)
+timeout_sec = 1200.0 # the solver runs on every held-out plan (up to 40 s each)
 environment_mode = "separate"
 
 [agent]

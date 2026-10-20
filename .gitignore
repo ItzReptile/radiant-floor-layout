@@ -19,3 +19,7 @@ vendor/
 
 # Harbor job outputs
 jobs/
+
+# Python bytecode
+__pycache__/
+*.pyc

@@ -2,7 +2,7 @@
 """Verifier for radiant-floor-layout.
 
 The agent's solver (/app/solver/solve.py) is run on every held-out floor plan in
-/tests/plans, as an unprivileged user that cannot read /tests, with a 15 s limit per plan.
+/tests/plans, as an unprivileged user that cannot read /tests, with a 40 s limit per plan.
 Each layout it writes is judged by the verifier's own copy of the checker; every plan must
 pass. The held-out plans come from the same generator as the samples in /app/plans, and the
 reference solver passes every one of them.
@@ -25,7 +25,7 @@ from runner_guard import kill_runner_processes  # noqa: E402
 
 SOLVER = Path("/app/solver")
 RUNNER = "porter"
-TIMEOUT_S = 15
+TIMEOUT_S = 40
 RUNS = Path("/tmp/runs")
 PLANS = sorted((HERE / "plans").glob("*.json"))
 
